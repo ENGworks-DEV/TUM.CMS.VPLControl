@@ -508,35 +508,11 @@ namespace TUM.CMS.VplControl.Core
             elementsToZoom.AddRange(Children.OfType<Ellipse>());
             elementsToZoom.AddRange(Children.OfType<Path>());
 
-            foreach (var element in elementsToZoom)
+            /*foreach (var element in elementsToZoom)
             {
                 element.UpdateLayout();
 
                 var position = e.GetPosition(element);
-                double width = 0;
-                double height = 0;
-
-                if (element is Border)
-                {
-                    var border = element as Border;
-
-                    width = border.ActualWidth;
-                    height = border.ActualHeight;
-                }
-                else if (element is Ellipse)
-                {
-                    var ellipse = element as Ellipse;
-
-                    width = ellipse.ActualWidth;
-                    height = ellipse.ActualHeight;
-                }
-                else if (element is Path)
-                {
-                    var path = element as Path;
-
-                    width = path.ActualWidth;
-                    height = path.ActualHeight;
-                }
 
                 if (e.Delta > 0)
                 {
@@ -551,6 +527,21 @@ namespace TUM.CMS.VplControl.Core
                     element.RenderTransform = new MatrixTransform(m);
                 }
    
+            }*/
+
+            if (e.Delta > 0)
+            {
+                var position = e.GetPosition(this);
+                Matrix m = RenderTransform.Value;
+                m.ScaleAtPrepend(1.15, 1.15, position.X, position.Y);
+                RenderTransform = new MatrixTransform(m);
+            }
+            else
+            {
+                var position = e.GetPosition(this);
+                Matrix m = RenderTransform.Value;
+                m.ScaleAtPrepend(1 / 1.15, 1 / 1.15, position.X, position.Y);
+                RenderTransform = new MatrixTransform(m);
             }
             
             mouseMode = MouseMode.Nothing;
