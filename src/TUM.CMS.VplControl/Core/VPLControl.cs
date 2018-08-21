@@ -538,15 +538,21 @@ namespace TUM.CMS.VplControl.Core
                     height = path.ActualHeight;
                 }
 
-                if (width > 0 && height > 0)
+                if (e.Delta > 0)
                 {
-                    element.RenderTransformOrigin = new Point(position.X/width, position.Y/height);
+                    Matrix m = element.RenderTransform.Value;
+                    m.ScaleAtPrepend(1.15, 1.15, position.X, position.Y);
+                    element.RenderTransform = new MatrixTransform(m);
                 }
+                else
+                {
+                    Matrix m = element.RenderTransform.Value;
+                    m.ScaleAtPrepend(1/1.15, 1/1.15, position.X, position.Y);
+                    element.RenderTransform = new MatrixTransform(m);
+                }
+   
             }
-
-            ScaleTransform.ScaleX += zoom;
-            ScaleTransform.ScaleY += zoom;
-
+            
             mouseMode = MouseMode.Nothing;
         }
 
