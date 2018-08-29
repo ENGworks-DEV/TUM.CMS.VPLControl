@@ -17,6 +17,7 @@
     <Color x:Key="ColorRed" R="211" G="95" B="95" A="255" />
     <Color x:Key="ColorYellow" R="255" G="221" B="85" A="255" />
     <Color x:Key="ColorOker" R="219" G="198" B="165" A="255" />
+    <Color x:Key="ColorBackground" R="219" G="198" B="165" A="255" />
 
     <SolidColorBrush x:Key="BrushBlue" Color="{StaticResource ColorBlue}" />
     <SolidColorBrush x:Key="BrushRed" Color="{StaticResource ColorRed}" />
@@ -25,7 +26,7 @@
 
 
     <!-- Dynamic resources -->
-    <SolidColorBrush x:Key="BackgroundBrush" Color="White" />
+    <SolidColorBrush x:Key="BackgroundBrush" Color="ColorBackground" />
     <SolidColorBrush x:Key="GridBrush" Color="DarkGray" />
 
     <FontFamily x:Key="FontFamily" />
@@ -42,7 +43,7 @@
     <SolidColorBrush x:Key="ButtonBorderBrush" Color="{StaticResource ColorBlue}" />
     <SolidColorBrush x:Key="ButtonFillBrush" Color="White" />
 
-    <SolidColorBrush x:Key="NodeBorderBrush" Color="DarkGray" />
+    <SolidColorBrush x:Key="NodeBorderBrush" Color="Black" />
     <SolidColorBrush x:Key="GroupBorderBrush" Color="{DynamicResource ColorOker}" />
     
     <SolidColorBrush x:Key="NodeBorderBrushMouseOver" Color="Black" />
@@ -51,7 +52,7 @@
     <SolidColorBrush x:Key="GroupBorderBrushMouseOver" Color="Black" />
     <SolidColorBrush x:Key="GroupBorderBrushSelection" Color="Black" />
 
-    <SolidColorBrush x:Key="NodeBackgroundBrush" Color="WhiteSmoke" />
+    <SolidColorBrush x:Key="NodeBackgroundBrush" Color="Black" />
     <SolidColorBrush x:Key="NodeBackgroundBrushError" Color="Red" />
 
     <SolidColorBrush x:Key="GroupBackgroundBrush" Color="Transparent" />
@@ -90,9 +91,14 @@
     <Style x:Key="VplElementBorderStyle" TargetType="Border">
         <Setter Property="BorderBrush" Value="{DynamicResource NodeBorderBrush}" />
         <Setter Property="BorderThickness" Value="2" />
-        <Setter Property="CornerRadius" Value="10" />
+        <Setter Property="CornerRadius" Value="2" />
         <Setter Property="Padding" Value="3" />
         <Setter Property="Background" Value="{DynamicResource NodeBackgroundBrush}" />
+        <Setter Property="Effect">
+            <Setter.Value>
+                <DropShadowEffect BlurRadius="10" Color="#FF872E2E" />
+            </Setter.Value>
+        </Setter>
 
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
@@ -118,9 +124,14 @@
     <Style x:Key="VplElementBorderSelectionStyle" TargetType="Border">
         <Setter Property="BorderBrush" Value="{DynamicResource NodeBorderBrushSelection}" />
         <Setter Property="BorderThickness" Value="2" />
-        <Setter Property="CornerRadius" Value="10" />
+        <Setter Property="CornerRadius" Value="2" />
         <Setter Property="Padding" Value="3" />
         <Setter Property="Background" Value="{DynamicResource NodeBackgroundBrush}" />
+        <Setter Property="Effect">
+            <Setter.Value>
+                <DropShadowEffect BlurRadius="20" Color="#EE872E2E" />
+            </Setter.Value>
+        </Setter>
     </Style>
 
     <Style x:Key="HitTestBorderStyle" TargetType="Border">
@@ -167,7 +178,7 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="HasDropShadow" Value="true">
-                            <Setter TargetName="Border" Property="CornerRadius" Value="5" />
+                            <Setter TargetName="Border" Property="CornerRadius" Value="0" />
                             <Setter TargetName="Border" Property="SnapsToDevicePixels" Value="true" />
                         </Trigger>
                     </ControlTemplate.Triggers>
@@ -184,7 +195,7 @@
     <ToolTip x:Key="ToolTipRight" Style="{StaticResource ToolTipRightStyle}"
              DataContext="{Binding PlacementTarget, RelativeSource={RelativeSource Self}}">
         <StackPanel>
-            <TextBlock Text="{Binding Text}" />
+            <TextBlock Text="{Binding Text}" Foreground="White" />
         </StackPanel>
     </ToolTip>
 
@@ -196,13 +207,12 @@
     <ToolTip x:Key="ToolTipLeft" Style="{StaticResource ToolTipLeftStyle}"
              DataContext="{Binding PlacementTarget, RelativeSource={RelativeSource Self}}">
         <StackPanel>
-            <TextBlock Text="{Binding Text}" />
+            <TextBlock Text="{Binding Text}" Foreground="White" />
         </StackPanel>
     </ToolTip>
         
     <Style x:Key="VplPortStyleRight" TargetType="core:Port">
-        <Setter Property="Width" Value="{DynamicResource PortSize}" />
-        <Setter Property="Height" Value="{DynamicResource PortSize}" />
+        <Setter Property="Height" Value="25" />
         <Setter Property="Margin" Value="5, 5, 7, 5" />
         <Setter Property="Template">
             <Setter.Value>
@@ -216,6 +226,10 @@
                             Stroke="{DynamicResource PortStrokeBrush}"
                             StrokeThickness="{DynamicResource PortStrokeThickness}" 
                         />
+                        <StackPanel Orientation="Vertical">
+                            <TextBlock Text="{TemplateBinding Description}" Margin="5 0 0 0" Foreground="White" ></TextBlock>
+                            <TextBlock Foreground="DarkGray" FontSize="9px" Text="{TemplateBinding PortDataType}" Margin="5 -5 0 0"></TextBlock>
+                        </StackPanel>
                     </StackPanel>
                     
                     <ControlTemplate.Triggers>
@@ -231,13 +245,12 @@
     </Style>
 
     <Style x:Key="VplPortStyleLeft" TargetType="core:Port">
-        <Setter Property="Width" Value="100" />
-        <Setter Property="Height" Value="{DynamicResource PortSize}" />
+        <Setter Property="Height" Value="25" />
         <Setter Property="Margin" Value="5, 5, 7, 5" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="core:Port">
-                    <StackPanel Orientation="Horizontal">
+                    <StackPanel HorizontalAlignment="Center" Height="Auto" Width="Auto" Orientation="Horizontal">
                         <Ellipse Name="ellipse" 
                              Width="{DynamicResource PortSize}" 
                              Height="{DynamicResource PortSize}"
@@ -245,10 +258,10 @@
                              Stroke="{DynamicResource PortStrokeBrush}"
                              StrokeThickness="{DynamicResource PortStrokeThickness}" 
                         />
-                        <TextBlock 
-                            Text="{TemplateBinding Description}"
-                            Margin="5 0 0 0"
-                        ></TextBlock>
+                        <StackPanel Orientation="Vertical">
+                            <TextBlock FontSize="12px" Text="{TemplateBinding Description}" Margin="5 0 0 0" Foreground="White" ></TextBlock>
+                            <TextBlock Foreground="DarkGray" FontSize="9px" Text="{TemplateBinding PortDataType}" Margin="5 -5 0 0"></TextBlock>
+                        </StackPanel>
                     </StackPanel>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="true">
@@ -383,7 +396,7 @@
 
 
     <Style x:Key="EditableLabelStyleNode" TargetType="{x:Type Label}">
-        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
+        <Setter Property="Foreground" Value="White" />
         <Setter Property="Background" Value="{DynamicResource BrushOker}" />
         <Setter Property="Padding" Value="5" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
@@ -393,6 +406,7 @@
                 <ControlTemplate TargetType="{x:Type Label}">
                     <Grid>
                         <TextBox Name="textBox"
+                                 Foreground="White"
                                  Grid.ZIndex="1"
                                  Padding="0,0,0,0"
                                  Text="{Binding RelativeSource={RelativeSource AncestorType={x:Type Label}}, Path=Content, UpdateSourceTrigger=PropertyChanged}"
@@ -424,7 +438,7 @@
 
 
     <Style x:Key="EditableLabelStyleGroup" TargetType="{x:Type Label}">
-        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
+        <Setter Property="Foreground" Value="White" />
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="Padding" Value="0" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
@@ -440,7 +454,9 @@
                                  Padding="0,0,0,0"
                                  FontSize="16"
                                  Text="{Binding RelativeSource={RelativeSource AncestorType={x:Type Label}}, Path=Content, UpdateSourceTrigger=PropertyChanged}"
-                                 Opacity="0" />
+                                 Opacity="0" 
+                                 Foreground="White"
+                                 />
                         <Border BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}"
                                 Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}"

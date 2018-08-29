@@ -138,8 +138,7 @@ namespace TUM.CMS.VplControl.Core
             // ----------------------------------------------------------------------------------------------------------------------
             TopComment = new Comment(this)
             {
-                Text =
-                    "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
+                Text = "",
                 Background = HostCanvas.FindResource("CommentBackgroundBrushError") as Brush,
                 ExpandSide = CommentExpandSides.Top
             };
@@ -147,8 +146,7 @@ namespace TUM.CMS.VplControl.Core
 
             BottomComment = new Comment(this)
             {
-                Text =
-                    "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
+                Text = "",
                 Background = HostCanvas.FindResource("CommentBackgroundBrush") as Brush,
                 ExpandSide = CommentExpandSides.Bottom
             };
