@@ -21,7 +21,7 @@ namespace TUM.CMS.VplControl.Core
             DataType = type;
             PortType = portType;
             Name = name;
-            Description = name;
+            Description = String.Format("{0} ({1})", name, type.Name);
 
             if (portType == PortTypes.Input)
                 Style = hostCanvas.FindResource("VplPortStyleLeft") as Style;

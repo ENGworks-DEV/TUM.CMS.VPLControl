@@ -508,45 +508,42 @@ namespace TUM.CMS.VplControl.Core
             elementsToZoom.AddRange(Children.OfType<Ellipse>());
             elementsToZoom.AddRange(Children.OfType<Path>());
 
-            foreach (var element in elementsToZoom)
+            /*foreach (var element in elementsToZoom)
             {
                 element.UpdateLayout();
 
                 var position = e.GetPosition(element);
-                double width = 0;
-                double height = 0;
 
-                if (element is Border)
+                if (e.Delta > 0)
                 {
-                    var border = element as Border;
-
-                    width = border.ActualWidth;
-                    height = border.ActualHeight;
+                    Matrix m = element.RenderTransform.Value;
+                    m.ScaleAtPrepend(1.15, 1.15, position.X, position.Y);
+                    element.RenderTransform = new MatrixTransform(m);
                 }
-                else if (element is Ellipse)
+                else
                 {
-                    var ellipse = element as Ellipse;
-
-                    width = ellipse.ActualWidth;
-                    height = ellipse.ActualHeight;
+                    Matrix m = element.RenderTransform.Value;
+                    m.ScaleAtPrepend(1/1.15, 1/1.15, position.X, position.Y);
+                    element.RenderTransform = new MatrixTransform(m);
                 }
-                else if (element is Path)
-                {
-                    var path = element as Path;
+   
+            }*/
 
-                    width = path.ActualWidth;
-                    height = path.ActualHeight;
-                }
-
-                if (width > 0 && height > 0)
-                {
-                    element.RenderTransformOrigin = new Point(position.X/width, position.Y/height);
-                }
+            if (e.Delta > 0)
+            {
+                var position = e.GetPosition(this);
+                Matrix m = RenderTransform.Value;
+                m.ScaleAtPrepend(1.15, 1.15, position.X, position.Y);
+                RenderTransform = new MatrixTransform(m);
             }
-
-            ScaleTransform.ScaleX += zoom;
-            ScaleTransform.ScaleY += zoom;
-
+            else
+            {
+                var position = e.GetPosition(this);
+                Matrix m = RenderTransform.Value;
+                m.ScaleAtPrepend(1 / 1.15, 1 / 1.15, position.X, position.Y);
+                RenderTransform = new MatrixTransform(m);
+            }
+            
             mouseMode = MouseMode.Nothing;
         }
 
