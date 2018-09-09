@@ -35,15 +35,28 @@ namespace TUM.CMS.VplControl.Core
             HasError = false;
 
             SpaceCanvas = new Canvas();
-            
-            
+
+            //Adding a title to nodes. A new subgrid holds the title an the node panel
+            //TODO : Clean up
+
+            // ----------------------------------------------------------------------------------------------------------------------
+            // Container Panel
+            // ----------------------------------------------------------------------------------------------------------------------
+
             Grid container = new Grid { ShowGridLines = false, Background = Brushes.Transparent };
             container.RowDefinitions.Insert(0, new RowDefinition());
             container.RowDefinitions.Insert(1, new RowDefinition());
+
             Children.Add(container);
 
             NodeTitle = new Grid { ShowGridLines = false, Background = Brushes.Transparent };
-            Title(container , new Label { Content = this.GetType().Name, Foreground = Brushes.White, HorizontalContentAlignment = HorizontalAlignment.Center });
+
+            Title(container , new Label {
+                Content = this.GetType().Name,
+                Foreground = Brushes.White,
+                HorizontalContentAlignment = HorizontalAlignment.Center,
+                FontSize = 13
+            });
             
             container.Children.Add(ContentGrid = new Grid {ShowGridLines = false, Background = Brushes.Transparent});
             SetColumn(ContentGrid, 0);
