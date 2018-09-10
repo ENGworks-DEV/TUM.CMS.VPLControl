@@ -51,11 +51,12 @@ namespace TUM.CMS.VplControl.Core
 
             NodeTitle = new Grid { ShowGridLines = false, Background = Brushes.Transparent };
 
-            Title(container , new Label {
+            Title(container, new Label {
                 Content = this.GetType().Name,
                 Foreground = Brushes.White,
                 HorizontalContentAlignment = HorizontalAlignment.Center,
-                FontSize = 13
+                FontSize = 13,
+                Padding = new Thickness(0)
             });
             
             container.Children.Add(ContentGrid = new Grid {ShowGridLines = false, Background = Brushes.Transparent});
