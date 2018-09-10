@@ -40,7 +40,10 @@ namespace TUM.CMS.VplControl.Core
         private TrulyObservableCollection<Node> tempCollection;
         public Line TempLine;
         internal Port TempStartPort;
-
+        private Double _ScaleXMax = 4.0;
+        private Double _ScaleYMax = 4.0;
+        private Double _ScaleXMin = 0.5;
+        private Double _ScaleYMin = 0.5;
         public VplControl()
         {
             if (!DesignerProperties.GetIsInDesignMode(this))
@@ -503,50 +506,48 @@ namespace TUM.CMS.VplControl.Core
             if (!(e.Delta > 0) && (ScaleTransform.ScaleX < .4 || ScaleTransform.ScaleY < .4))
                 return;
 
-            var elementsToZoom = new List<UIElement>();
-            elementsToZoom.AddRange(Children.OfType<Border>());
-            elementsToZoom.AddRange(Children.OfType<Ellipse>());
-            elementsToZoom.AddRange(Children.OfType<Path>());
+            double vScaleX = ScaleTransform.ScaleX + zoom;
+            double vScaleY = ScaleTransform.ScaleY + zoom;
 
-            foreach (var element in elementsToZoom)
-            {
-                element.UpdateLayout();
+            if (IsValidZoom(vScaleX, vScaleY)) {
+                var elementsToZoom = new List<UIElement>();
+                elementsToZoom.AddRange(Children.OfType<Border>());
+                elementsToZoom.AddRange(Children.OfType<Ellipse>());
+                elementsToZoom.AddRange(Children.OfType<Path>());
 
-                var position = e.GetPosition(element);
-                double width = 0;
-                double height = 0;
+                foreach (var element in elementsToZoom) {
+                    element.UpdateLayout();
 
-                if (element is Border)
-                {
-                    var border = element as Border;
+                    var position = e.GetPosition(element);
+                    double width = 0;
+                    double height = 0;
 
-                    width = border.ActualWidth;
-                    height = border.ActualHeight;
+                    if (element is Border) {
+                        var border = element as Border;
+
+                        width = border.ActualWidth;
+                        height = border.ActualHeight;
+                    } else if (element is Ellipse) {
+                        var ellipse = element as Ellipse;
+
+                        width = ellipse.ActualWidth;
+                        height = ellipse.ActualHeight;
+                    } else if (element is Path) {
+                        var path = element as Path;
+
+                        width = path.ActualWidth;
+                        height = path.ActualHeight;
+                    }
+
+                    if (width > 0 && height > 0) {
+                        element.RenderTransformOrigin = new Point(position.X / width, position.Y / height);
+                    }
                 }
-                else if (element is Ellipse)
-                {
-                    var ellipse = element as Ellipse;
 
-                    width = ellipse.ActualWidth;
-                    height = ellipse.ActualHeight;
-                }
-                else if (element is Path)
-                {
-                    var path = element as Path;
+                ScaleTransform.ScaleX += zoom;
+                ScaleTransform.ScaleY += zoom;
 
-                    width = path.ActualWidth;
-                    height = path.ActualHeight;
-                }
-
-                if (width > 0 && height > 0)
-                {
-                    element.RenderTransformOrigin = new Point(position.X/width, position.Y/height);
-                }
             }
-
-            ScaleTransform.ScaleX += zoom;
-            ScaleTransform.ScaleY += zoom;
-
             mouseMode = MouseMode.Nothing;
         }
 
@@ -1127,6 +1128,22 @@ namespace TUM.CMS.VplControl.Core
             {
                 node.Show();
             }
+        }
+
+        private bool IsValidZoom(double valScaleX, double valScaleY) {
+            bool vResult = false;
+            try {
+                if ((valScaleX <= _ScaleXMax) && (valScaleY <= _ScaleYMax)) {
+                    if ((valScaleX >= _ScaleXMin) && (valScaleY >= _ScaleYMin)) {
+                        vResult = true;
+                    }
+                }
+            } catch (Exception) {
+
+                vResult = true;
+            }
+
+            return vResult;
         }
     }
 
