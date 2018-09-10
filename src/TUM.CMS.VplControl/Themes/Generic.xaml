@@ -250,7 +250,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="core:Port">
-                    <StackPanel HorizontalAlignment="Center" Height="Auto" Width="Auto" Orientation="Horizontal">
+                    <StackPanel HorizontalAlignment="Left" Height="Auto" Width="Auto" Orientation="Horizontal">
                         <Ellipse Name="ellipse" 
                              Width="{DynamicResource PortSize}" 
                              Height="{DynamicResource PortSize}"

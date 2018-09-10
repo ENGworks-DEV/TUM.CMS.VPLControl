@@ -80,15 +80,20 @@ namespace TUM.CMS.VplControl.Core
             set { SetValue(PortDataTypeProperty, value); }
         }
 
+        public string getDatDescription(object Data) {
+            if (Data != null && Data.GetType() == typeof(List<>))
+            {
+                return Utilities.Utilities.DataToString((Data as List<object>).GetRange(0, 10));
+            }
+
+            return Utilities.Utilities.DataToString(Data);
+        }
+
         public string Text
         {
             get
             {
-                //if (Data != null)
-                //    return Name + " : " + DataType.Name + " : " + Data;
-                //return Name + " : " + DataType.Name + " : null";
-
-                return Utilities.Utilities.DataToString(Data);
+                return getDatDescription(Data);
             }
         }
 
