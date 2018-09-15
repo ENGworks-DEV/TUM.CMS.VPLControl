@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>TUM.CMS.VplControl.Watch3D</RootNamespace>
     <AssemblyName>TUM.CMS.VplControl.Watch3D</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
@@ -96,10 +96,6 @@
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
       <Private>True</Private>
     </Reference>
-    <Reference Include="TUM.CMS.VplControl, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\bin\TUM.CMS.VplControl.dll</HintPath>
-    </Reference>
     <Reference Include="WindowsBase">
       <Private>True</Private>
     </Reference>
@@ -173,6 +169,12 @@
     <Content Include="sharpdx_direct3d11_effects_x86.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TUM.CMS.VplControl\TUM.CMS.VplControl.csproj">
+      <Project>{593e9bfd-be78-4487-9e22-76ae7df0b84a}</Project>
+      <Name>TUM.CMS.VplControl</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
