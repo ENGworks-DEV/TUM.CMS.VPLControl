@@ -34,9 +34,34 @@ namespace TUM.CMS.VplControl.Core
             IsHitTestVisible = true;
             HasError = false;
 
-
             SpaceCanvas = new Canvas();
-            Children.Add(ContentGrid = new Grid {ShowGridLines = false, Background = Brushes.Transparent});
+
+            //Adding a title to nodes. A new subgrid holds the title an the node panel
+            //TODO : Clean up
+
+            // ----------------------------------------------------------------------------------------------------------------------
+            // Container Panel
+            // ----------------------------------------------------------------------------------------------------------------------
+
+            Grid container = new Grid { ShowGridLines = false, Background = Brushes.Transparent };
+            container.RowDefinitions.Insert(0, new RowDefinition());
+            container.RowDefinitions.Insert(1, new RowDefinition());
+
+            Children.Add(container);
+
+            NodeTitle = new Grid { ShowGridLines = false, Background = Brushes.Transparent };
+
+            Title(container, new Label {
+                Content = this.GetType().Name,
+                Foreground = Brushes.White,
+                HorizontalContentAlignment = HorizontalAlignment.Center,
+                FontSize = 13,
+                Padding = new Thickness(0)
+            });
+            
+            container.Children.Add(ContentGrid = new Grid {ShowGridLines = false, Background = Brushes.Transparent});
+            SetColumn(ContentGrid, 0);
+            SetRow(ContentGrid, 1);
 
 
             if (hostCanvas.GraphFlowDirection == GraphFlowDirections.Horizontal)
@@ -138,8 +163,7 @@ namespace TUM.CMS.VplControl.Core
             // ----------------------------------------------------------------------------------------------------------------------
             TopComment = new Comment(this)
             {
-                Text =
-                    "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
+                Text = "",
                 Background = HostCanvas.FindResource("CommentBackgroundBrushError") as Brush,
                 ExpandSide = CommentExpandSides.Top
             };
@@ -147,8 +171,7 @@ namespace TUM.CMS.VplControl.Core
 
             BottomComment = new Comment(this)
             {
-                Text =
-                    "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
+                Text = "",
                 Background = HostCanvas.FindResource("CommentBackgroundBrush") as Brush,
                 ExpandSide = CommentExpandSides.Bottom
             };
@@ -231,6 +254,7 @@ namespace TUM.CMS.VplControl.Core
         public bool HasError { get; set; }
         public Guid Guid { get; set; }
         public Canvas SpaceCanvas { get; set; }
+        public Grid NodeTitle { get; private set; }
         public string NodeCaption { get; set; }
         public Grid ContentGrid { get; set; }
         public Grid MainContentGrid { get; set; }
@@ -400,6 +424,7 @@ namespace TUM.CMS.VplControl.Core
         }
 
         public abstract void Calculate();
+
         public event EventHandler DeletedInNodeCollection;
 
         public void Delete(bool removeConnectors = true)
@@ -414,6 +439,19 @@ namespace TUM.CMS.VplControl.Core
             if (removeConnectors) OnDeleted();
         }
 
+
+        public void Title(Grid container, UIElement control)
+        {
+
+
+            NodeTitle.RowDefinitions.Insert(0, new RowDefinition() );
+            container.Children.Add(control);
+            
+            SetRow(control, 0);
+            SetColumn(control, 0);
+            SetColumnSpan(control, 3);
+        }
+
         public override void binButton_Click(object sender, RoutedEventArgs e)
         {
             base.binButton_Click(sender, e);
@@ -426,7 +464,7 @@ namespace TUM.CMS.VplControl.Core
             MainContentGrid.RowDefinitions.Insert(MainContentGrid.Children.Count, new RowDefinition());
             MainContentGrid.Children.Add(control);
 
-            SetRow(control, MainContentGrid.Children.Count - 1);
+            SetRow(control, MainContentGrid.Children.Count -1 );
             SetColumn(control, 1);
         }
 
