@@ -6,7 +6,7 @@
     <Style x:Key="{x:Type l:SearchTextBox}" TargetType="{x:Type l:SearchTextBox}">
         <Setter Property="Background" Value="{DynamicResource NodeBackgroundBrush}" />
         <Setter Property="BorderBrush" Value="Black" />
-        <Setter Property="Foreground" Value="Black" />
+        <Setter Property="Foreground" Value="White" />
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="MinWidth" Value="300" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
@@ -73,14 +73,15 @@
                                           Grid.Row="0"
                                           VerticalAlignment="Center"
                                           Margin="5 0 0 0"
-                                          FontSize="20" />
+                                          FontSize="20"
+                                          Foreground="White"/>
 
                             <Label x:Name="LabelText"
                                    Margin="5 0 0 0"
                                    FontSize="20"
                                    Grid.Column="1"
                                    Grid.Row="0"
-                                   Foreground="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=LabelTextColor}"
+                                   Foreground="White"
                                    Content="{Binding RelativeSource={RelativeSource TemplatedParent},
                                            Path=LabelText}"
                                    Padding="2,0,0,0"

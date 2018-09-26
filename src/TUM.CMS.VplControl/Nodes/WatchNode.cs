@@ -17,16 +17,17 @@ namespace TUM.CMS.VplControl.Nodes
                 TextWrapping = TextWrapping.Wrap,
                 FontSize = 14,
                 Padding = new Thickness(5),
-                IsHitTestVisible = false
+                IsHitTestVisible = false,
+                Foreground= System.Windows.Media.Brushes.White,
             };
 
             var scrollViewer = new ScrollViewer
             {
                 HorizontalScrollBarVisibility = ScrollBarVisibility.Auto,
                 VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
-                MinWidth = 120,
+                MinWidth = 200,
                 MinHeight = 20,
-                MaxWidth = 200,
+                MaxWidth = 300,
                 MaxHeight = 400,
                 CanContentScroll = true,
                 Content = textBlock,
