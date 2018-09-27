@@ -22,7 +22,6 @@ namespace TUM.CMS.VplControl.Core
             PortType = portType;
             Name = name;
             Description = name;
-            PortDataType = type.Name;
 
             if (portType == PortTypes.Input)
                 Style = hostCanvas.FindResource("VplPortStyleLeft") as Style;
@@ -70,30 +69,15 @@ namespace TUM.CMS.VplControl.Core
             set { SetValue(DescriptionProperty, value); }
         }
 
-        public static readonly DependencyProperty PortDataTypeProperty =
-            DependencyProperty.Register("PortDataType", typeof(string), typeof(Port),
-                new UIPropertyMetadata(string.Empty));
-
-        public new string PortDataType
-        {
-            get { return (string)GetValue(PortDataTypeProperty); }
-            set { SetValue(PortDataTypeProperty, value); }
-        }
-
-        public string getDatDescription(object Data) {
-            if (Data != null && Data.GetType() == typeof(List<>))
-            {
-                return Utilities.Utilities.DataToString((Data as List<object>).GetRange(0, 10));
-            }
-
-            return Utilities.Utilities.DataToString(Data);
-        }
-
         public string Text
         {
             get
             {
-                return getDatDescription(Data);
+                //if (Data != null)
+                //    return Name + " : " + DataType.Name + " : " + Data;
+                //return Name + " : " + DataType.Name + " : null";
+
+                return Utilities.Utilities.DataToString(Data);
             }
         }
 
