@@ -74,7 +74,7 @@ namespace TUM.CMS.VplControl.Core
                 ExternalNodeTypes = new List<Type>();
 
                 TypeSensitive = true;
-
+                
                 InitializeGridBackground();
                 InitializeTheme();
             }
@@ -499,58 +499,47 @@ namespace TUM.CMS.VplControl.Core
         {
             if (!Keyboard.IsKeyDown(Key.LeftCtrl) && !Keyboard.IsKeyDown(Key.RightCtrl)) return;
 
+            
             mouseMode = MouseMode.Zooming;
 
-            var zoom = e.Delta > 0 ? .2 : -.2;
+            var zoom = e.Delta > 0 ? .1 : -.1;
 
             if (!(e.Delta > 0) && (ScaleTransform.ScaleX < .4 || ScaleTransform.ScaleY < .4))
                 return;
-
+            this.UpdateLayout();
             double vScaleX = ScaleTransform.ScaleX + zoom;
-            double vScaleY = ScaleTransform.ScaleY + zoom;
-
+            double vertFactor = (this.ActualHeight * 100 / this.ActualWidth /100);
+            double vScaleY = (ScaleTransform.ScaleY * vertFactor ) + zoom ;
+            var position = Mouse.GetPosition(this);
             if (IsValidZoom(vScaleX, vScaleY)) {
-                var elementsToZoom = new List<UIElement>();
-                elementsToZoom.AddRange(Children.OfType<Border>());
-                elementsToZoom.AddRange(Children.OfType<Ellipse>());
-                elementsToZoom.AddRange(Children.OfType<Path>());
+                
 
-                foreach (var element in elementsToZoom) {
-                    element.UpdateLayout();
-
-                    var position = e.GetPosition(element);
-                    double width = 0;
-                    double height = 0;
-
-                    if (element is Border) {
-                        var border = element as Border;
-
-                        width = border.ActualWidth;
-                        height = border.ActualHeight;
-                    } else if (element is Ellipse) {
-                        var ellipse = element as Ellipse;
-
-                        width = ellipse.ActualWidth;
-                        height = ellipse.ActualHeight;
-                    } else if (element is Path) {
-                        var path = element as Path;
-
-                        width = path.ActualWidth;
-                        height = path.ActualHeight;
-                    }
-
-                    if (width > 0 && height > 0) {
-                        element.RenderTransformOrigin = new Point(position.X / width, position.Y / height);
-                    }
-                }
-
+                double centerX = (position.X - TranslateTransform.X) / ScaleTransform.ScaleX;
+                double centerY = (position.Y - TranslateTransform.Y) / vScaleY;
+                ScaleTransform.CenterX = position.X;
+                ScaleTransform.CenterY = position.Y;
                 ScaleTransform.ScaleX += zoom;
-                ScaleTransform.ScaleY += zoom;
+                ScaleTransform.ScaleY += zoom ;
+                TranslateTransform.X = position.X - ScaleTransform.CenterX * vScaleX;
+                TranslateTransform.Y = position.Y - ScaleTransform.CenterX * vScaleY;
+                
 
             }
             mouseMode = MouseMode.Nothing;
         }
-
+        /// Zoom function
+        private void Zoom(Point point, double scale)
+        {
+            //Calcul des centres selon la position de la souris
+            double centerX = (point.X - TranslateTransform.X) / ScaleTransform.ScaleX;
+            double centerY = (point.Y - TranslateTransform.Y) / ScaleTransform.ScaleY;
+            //Mise à l'échelle
+            ScaleTransform.ScaleX = scale;
+            ScaleTransform.ScaleY = scale;
+            //Retablissement du translate pour éviter un décalage
+            TranslateTransform.X = point.X - centerX * ScaleTransform.ScaleX;
+            TranslateTransform.Y = point.Y - centerY * ScaleTransform.ScaleY;
+        }
 
         protected override void HandleMouseUp(object sender, MouseButtonEventArgs e)
         {

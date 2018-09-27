@@ -11,7 +11,7 @@ namespace TUM.CMS.VplControl.Core
         public readonly ScaleTransform ScaleTransform = new ScaleTransform();
         public readonly TranslateTransform TranslateTransform = new TranslateTransform();
         internal MouseMode mouseMode = MouseMode.Nothing;
-
+        public readonly TransformGroup _transformGroup = new TransformGroup();
         protected Point origin;
 
         public List<UIElement> SelectedUiElements = new List<UIElement>();
