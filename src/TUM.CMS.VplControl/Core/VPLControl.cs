@@ -367,18 +367,18 @@ namespace TUM.CMS.VplControl.Core
 
         private void HideElementsForTransformation()
         {
-            //foreach (var node in NodeCollection)
-            //{
-            //    node.ContentGrid.Visibility = Visibility.Collapsed;
-            //    node.HitTestGrid.Visibility = Visibility.Collapsed;
-            //}
+            foreach (var node in NodeCollection)
+            {
+                node.ContentGrid.Visibility = Visibility.Collapsed;
+                node.HitTestGrid.Visibility = Visibility.Collapsed;
+            }
 
-            //foreach (var conn in ConnectorCollection)
-            //{
-            //    conn.Path.Visibility = Visibility.Collapsed;
-            //    conn.srtEllipse.Visibility = Visibility.Collapsed;
-            //    conn.endEllipse.Visibility = Visibility.Collapsed;
-            //}
+            foreach (var conn in ConnectorCollection)
+            {
+                conn.Path.Visibility = Visibility.Collapsed;
+                conn.srtEllipse.Visibility = Visibility.Collapsed;
+                conn.endEllipse.Visibility = Visibility.Collapsed;
+            }
         }
 
         private void UnselectAllElements()
@@ -463,7 +463,7 @@ namespace TUM.CMS.VplControl.Core
                 TranslateTransform.Y = origin.Y - v.Y;
             }
 
-        
+
             switch (SplineMode)
             {
                 case SplineModes.Nothing:
