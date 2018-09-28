@@ -507,7 +507,8 @@ namespace TUM.CMS.VplControl.Core
                 return;
 
             double vScaleX = ScaleTransform.ScaleX + zoom;
-            double vScaleY = ScaleTransform.ScaleY + zoom;
+            double vScaleY = (ScaleTransform.ScaleY + zoom) * (this.ActualHeight * 100 / this.ActualWidth / 100);
+
 
             if (IsValidZoom(vScaleX, vScaleY)) {
                 var elementsToZoom = new List<UIElement>();
