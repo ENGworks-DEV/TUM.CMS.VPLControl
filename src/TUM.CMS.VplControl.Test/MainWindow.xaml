@@ -5,8 +5,31 @@
 
     x:Class="TUM.CMS.VplControl.Test.MainWindow"
     Title="MainWindow" WindowStartupLocation="CenterScreen" WindowState="Maximized">
+    <Window.InputBindings>
+      
+        <KeyBinding Key="C" Modifiers="Control" Command="Copy" />
+        <KeyBinding Key="V" Modifiers="Control" Command="Paste" />
+        <KeyBinding Key="Delete" Command="Delete" />
+        <KeyBinding Key="A" Modifiers="Control" Command="SelectAll" />
+        <!--<KeyBinding Key="G" Modifiers="Control" Command="Group"></KeyBinding>
+        <KeyBinding Key="Esc" Command="UnselectAll"></KeyBinding>-->
 
+    </Window.InputBindings>
+    <Window.CommandBindings>
 
+        <!-- Source -->
+        <!-- http://stackoverflow.com/questions/4682915/defining-menuitem-shortcuts -->
+
+        <CommandBinding Command="Copy" Executed="btnCopy_Click" />
+        <CommandBinding Command="Paste" Executed="BtnPaste_Click" />
+        <CommandBinding Command="Delete" Executed="BtnDelete_Click" />
+
+        
+        <CommandBinding Command="SelectAll" Executed="BtnAll_Click" />
+        <!--<CommandBinding Command="Group" Executed="BtnGroup_Click" />
+        <CommandBinding Command="UnselectAll"    Executed="btnUnselect_Click" />-->
+
+    </Window.CommandBindings>
     <Grid>
         <TabControl>
             <TabItem Header="Project">

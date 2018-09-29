@@ -50,8 +50,8 @@ namespace TUM.CMS.VplControl.Core
             {
                 try
                 {
-                    DefaultStyleKeyProperty.OverrideMetadata(typeof (VplControl),
-                        new FrameworkPropertyMetadata(typeof (VplControl)));
+                    DefaultStyleKeyProperty.OverrideMetadata(typeof(VplControl),
+                        new FrameworkPropertyMetadata(typeof(VplControl)));
                 }
                 catch (Exception ex)
                 {
@@ -62,7 +62,7 @@ namespace TUM.CMS.VplControl.Core
                 GraphFlowDirection = GraphFlowDirections.Vertical;
 
                 KeyDown += VplControl_KeyDown;
-                KeyUp += VplControl_KeyDown;
+                //KeyUp += VplControl_KeyUp;
 
                 ScaleTransform.Changed += ScaleTransformOnChanged;
 
@@ -157,7 +157,7 @@ namespace TUM.CMS.VplControl.Core
 
         private void InitializeTheme()
         {
-            Theme = new Theme(this) {FontFamily = TextElement.GetFontFamily(this)};
+            Theme = new Theme(this) { FontFamily = TextElement.GetFontFamily(this) };
 
             var solidColorBrush = TextElement.GetForeground(this) as SolidColorBrush;
             if (solidColorBrush != null)
@@ -177,7 +177,7 @@ namespace TUM.CMS.VplControl.Core
 
             Theme.ConnectorThickness =
                 Application.Current.Resources["ConnectorThickness"] is double
-                    ? (double) Application.Current.Resources["ConnectorThickness"]
+                    ? (double)Application.Current.Resources["ConnectorThickness"]
                     : 0;
 
             var toolTipBackgroundBrush = Application.Current.Resources["TooltipBackgroundBrush"] as SolidColorBrush;
@@ -201,12 +201,12 @@ namespace TUM.CMS.VplControl.Core
 
             Theme.PortSize =
                 Application.Current.Resources["PortSize"] is double
-                    ? (double) Application.Current.Resources["PortSize"]
+                    ? (double)Application.Current.Resources["PortSize"]
                     : 0;
 
             Theme.PortStrokeThickness =
                 Application.Current.Resources["PortStrokeThickness"] is double
-                    ? (double) Application.Current.Resources["PortStrokeThickness"]
+                    ? (double)Application.Current.Resources["PortStrokeThickness"]
                     : 0;
 
             Theme.ButtonBorderColor = (Application.Current.Resources["ButtonBorderBrush"] as SolidColorBrush).Color;
@@ -221,7 +221,7 @@ namespace TUM.CMS.VplControl.Core
 
             Theme.NodeBorderCornerRadius =
                 Application.Current.Resources["NodeBorderCornerRadius"] is double
-                    ? (double) Application.Current.Resources["NodeBorderCornerRadius"]
+                    ? (double)Application.Current.Resources["NodeBorderCornerRadius"]
                     : 0;
 
             Theme.NodeBorderColorOnMouseOver =
@@ -234,7 +234,7 @@ namespace TUM.CMS.VplControl.Core
 
             Theme.LineThickness =
                 Application.Current.Resources["LineStrokeThickness"] is double
-                    ? (double) Application.Current.Resources["LineStrokeThickness"]
+                    ? (double)Application.Current.Resources["LineStrokeThickness"]
                     : 0;
 
             Theme.ConnEllipseFillColor =
@@ -242,7 +242,7 @@ namespace TUM.CMS.VplControl.Core
 
             Theme.ConnEllipseSize =
                 Application.Current.Resources["ConnEllipseSize"] is double
-                    ? (double) Application.Current.Resources["ConnEllipseSize"]
+                    ? (double)Application.Current.Resources["ConnEllipseSize"]
                     : 0;
         }
 
@@ -400,6 +400,7 @@ namespace TUM.CMS.VplControl.Core
 
         protected override void HandleMouseMove(object sender, MouseEventArgs e)
         {
+
             if (mouseMode == MouseMode.PreSelectionRectangle || mouseMode == MouseMode.SelectionRectangle)
             {
                 if (e.LeftButton == MouseButtonState.Pressed)
@@ -414,7 +415,7 @@ namespace TUM.CMS.VplControl.Core
                             Background = Brushes.Transparent,
                             BorderBrush =
                                 new SolidColorBrush(Application.Current.Resources["ColorBlue"] is Color
-                                    ? (Color) Application.Current.Resources["ColorBlue"]
+                                    ? (Color)Application.Current.Resources["ColorBlue"]
                                     : new Color()),
                             CornerRadius = new CornerRadius(5),
                             BorderThickness = new Thickness(2)
@@ -467,14 +468,14 @@ namespace TUM.CMS.VplControl.Core
             switch (SplineMode)
             {
                 case SplineModes.Nothing:
-                    ClearTempLine();
+                    //ClearTempLine();
                     break;
                 case SplineModes.First:
                     break;
                 case SplineModes.Second:
                     if (TempLine == null)
                     {
-                        TempLine = new Line {Style = FindResource("VplLineStyle") as Style};
+                        TempLine = new Line { Style = FindResource("VplLineStyle") as Style };
                         Children.Add(TempLine);
                     }
 
@@ -497,7 +498,7 @@ namespace TUM.CMS.VplControl.Core
 
         protected override void HandleMouseWheel(object sender, MouseWheelEventArgs e)
         {
-            if (!Keyboard.IsKeyDown(Key.LeftCtrl) && !Keyboard.IsKeyDown(Key.RightCtrl)) return;
+            if (!((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)) return;
 
             mouseMode = MouseMode.Zooming;
 
@@ -690,173 +691,516 @@ namespace TUM.CMS.VplControl.Core
         }
         */
 
-
-        public void VplControl_KeyUp(object sender, KeyEventArgs e)
+            /// <summary>
+            /// Copy selected nodes
+            /// </summary>
+        public void VplControlCopy()
         {
-            switch (e.Key)
+            tempCollection = new TrulyObservableCollection<Node>();
+
+
+            foreach (var node in SelectedNodes)
+                tempCollection.Add(node);
+            ShowElementsAfterTransformation();
+
+        }
+
+        /// <summary>
+        /// Paste copied nodes
+        /// </summary>
+        public void VplControlPaste()
+        {
+            if (tempCollection == null) return;
+            if (tempCollection.Count == 0) return;
+
+            var bBox = Node.GetBoundingBoxOfNodes(tempCollection.ToList());
+
+            var copyPoint = new Point(bBox.Left + bBox.Size.Width / 2, bBox.Top + bBox.Size.Height / 2);
+            var pastePoint = Mouse.GetPosition(this);
+
+            var delta = Point.Subtract(pastePoint, copyPoint);
+
+            UnselectAllElements();
+
+            var alreadyClonedConnectors = new List<Connector>();
+            var copyConnections = new List<CopyConnection>();
+
+            // copy nodes from clipboard to canvas
+            foreach (var node in tempCollection)
             {
-                case Key.Delete:
+                var newNode = node.Clone();
 
-                    foreach (var node in SelectedNodes)
-                        node.Delete();
+                newNode.Left += delta.X;
+                newNode.Top += delta.Y;
 
-                    foreach (var conn in SelectedConnectors)
-                    {
-                        conn.Delete();
-                    }
+                newNode.Left = Convert.ToInt32(newNode.Left);
+                newNode.Top = Convert.ToInt32(newNode.Top);
 
-                    SelectedNodes.Clear();
-                    SelectedConnectors.Clear();
-                    break;
-                case Key.C:
+                newNode.Show();
+
+                copyConnections.Add(new CopyConnection { NewNode = newNode, OldNode = node });
+
+            }
+
+            foreach (var cc in copyConnections)
+            {
+                var counter = 0;
+
+                foreach (var conn in cc.OldNode.InputPorts)
                 {
-                    if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
+                    foreach (var connector in conn.ConnectedConnectors)
                     {
-                        tempCollection = new TrulyObservableCollection<Node>();
-
-
-                        foreach (var node in SelectedNodes)
-                            tempCollection.Add(node);
-                    }
-                }
-                    break;
-                case Key.V:
-                {
-                    if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
-                    {
-                        if (tempCollection == null) return;
-                        if (tempCollection.Count == 0) return;
-
-                        var bBox = Node.GetBoundingBoxOfNodes(tempCollection.ToList());
-
-                        var copyPoint = new Point(bBox.Left + bBox.Size.Width/2, bBox.Top + bBox.Size.Height/2);
-                        var pastePoint = Mouse.GetPosition(this);
-
-                        var delta = Point.Subtract(pastePoint, copyPoint);
-
-                        UnselectAllElements();
-
-                        var alreadyClonedConnectors = new List<Connector>();
-                        var copyConnections = new List<CopyConnection>();
-
-                        // copy nodes from clipboard to canvas
-                        foreach (var node in tempCollection)
+                        if (!alreadyClonedConnectors.Contains(connector))
                         {
-                            var newNode = node.Clone();
+                            Connector newConnector = null;
 
-                            newNode.Left += delta.X;
-                            newNode.Top += delta.Y;
-
-                            newNode.Left = Convert.ToInt32(newNode.Left);
-                            newNode.Top = Convert.ToInt32(newNode.Top);
-
-                            newNode.Show();
-
-                            copyConnections.Add(new CopyConnection {NewNode = newNode, OldNode = node});
-
-                        }
-
-                        foreach (var cc in copyConnections)
-                        {
-                            var counter = 0;
-
-                            foreach (var conn in cc.OldNode.InputPorts)
+                            // start and end node are contained in selection
+                            if (tempCollection.Contains(connector.StartPort.ParentNode))
                             {
-                                foreach (var connector in conn.ConnectedConnectors)
+                                var cc2 =
+                                    copyConnections.FirstOrDefault(
+                                        i => Equals(i.OldNode, connector.StartPort.ParentNode));
+
+                                if (cc2 != null)
                                 {
-                                    if (!alreadyClonedConnectors.Contains(connector))
-                                    {
-                                        Connector newConnector = null;
-
-                                        // start and end node are contained in selection
-                                        if (tempCollection.Contains(connector.StartPort.ParentNode))
-                                        {
-                                            var cc2 =
-                                                copyConnections.FirstOrDefault(
-                                                    i => Equals(i.OldNode, connector.StartPort.ParentNode));
-
-                                            if (cc2 != null)
-                                            {
-                                                newConnector = new Connector(this, cc2.NewNode.OutputPorts[0],
-                                                    cc.NewNode.InputPorts[counter]);
-                                            }
-                                        }
-                                        // only end node is contained in selection
-                                        else
-                                        {
-                                            newConnector = new Connector(this, connector.StartPort,
-                                                cc.NewNode.InputPorts[counter]);
-                                        }
-
-                                        if (newConnector != null)
-                                        {
-                                            alreadyClonedConnectors.Add(connector);
-                                            ConnectorCollection.Add(newConnector);
-                                        }
-                                    }
+                                    newConnector = new Connector(this, cc2.NewNode.OutputPorts[0],
+                                        cc.NewNode.InputPorts[counter]);
                                 }
-                                counter++;
+                            }
+                            // only end node is contained in selection
+                            else
+                            {
+                                newConnector = new Connector(this, connector.StartPort,
+                                    cc.NewNode.InputPorts[counter]);
+                            }
+
+                            if (newConnector != null)
+                            {
+                                alreadyClonedConnectors.Add(connector);
+                                ConnectorCollection.Add(newConnector);
                             }
                         }
                     }
+                    counter++;
                 }
-                    break;
-                case Key.G:
-                {
-                    if (Keyboard.Modifiers == ModifierKeys.Control)
-                        GroupNodes();
-                }
-                    break;
-
-                case Key.S:
-                {
-                    if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
-                        SaveFile();
-                }
-                    break;
-                case Key.T:
-                {
-                    Console.WriteLine("T");
-                    foreach (var node in NodeCollection)
-                    {
-                        Console.WriteLine(node.ActualWidth);
-                        Console.WriteLine(node.ActualHeight);
-                    }
-                }
-                    break;
-                case Key.O:
-                {
-                    if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
-                        OpenFile();
-                }
-                    break;
-                case Key.A:
-                {
-                    if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
-                    {
-                        SelectedNodes.Clear();
-
-                        foreach (var node in NodeCollection)
-                        {
-                            node.IsSelected = true;
-                            SelectedNodes.Add(node);
-                        }
-                    }
-                }
-                    break;
-                case Key.Escape:
-                {
-                    UnselectAllElements();
-                    mouseMode = MouseMode.Nothing;
-                }
-                    break;
-                case Key.LeftCtrl:
-                    if (!Keyboard.IsKeyDown(Key.RightCtrl)) ShowElementsAfterTransformation();
-                    break;
-                case Key.RightCtrl:
-                    if (!Keyboard.IsKeyDown(Key.LeftCtrl)) ShowElementsAfterTransformation();
-                    break;
             }
+            ShowElementsAfterTransformation();
+
+        }
+        
+        /// <summary>
+        /// Delete selected nodes
+        /// </summary>
+        public void VplControlDelete()
+        {
+            foreach (var node in SelectedNodes)
+                node.Delete();
+
+            foreach (var conn in SelectedConnectors)
+            {
+                conn.Delete();
+            }
+
+            SelectedNodes.Clear();
+            SelectedConnectors.Clear();
+        }
+
+        /// <summary>
+        /// Group selected nodes
+        /// </summary>
+        public void VplControlGroup()
+        {
+
+            if (Keyboard.Modifiers == ModifierKeys.Control)
+                GroupNodes();
+        }
+
+        /// <summary>
+        /// Save file
+        /// </summary>
+        public void VplControlSaveFile()
+        {
+            SaveFile();
+        }
+
+        /// <summary>
+        /// Open file
+        /// </summary>
+        public void VplControlOpenFile()
+        {
+            OpenFile();
+        }
+
+        /// <summary>
+        /// Select all nodes
+        /// </summary>
+        public void VplControlSelectAll()
+        {
+            SelectedNodes.Clear();
+
+            foreach (var node in NodeCollection)
+            {
+                node.IsSelected = true;
+                SelectedNodes.Add(node);
+            }
+        }
+
+        /// <summary>
+        /// Unselect all nodes
+        /// </summary>
+        public void VplControlUnselectAll()
+        {
+                   UnselectAllElements();
+        }
+
+
+
+
+
+        public void VplControl_KeyUp(object sender, KeyEventArgs e)
+        {
+
+            //Debug
+            var k = e.Key;
+            var m = Keyboard.Modifiers;
+
+
+
+            if (e.Key == Key.C && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
+            {
+                tempCollection = new TrulyObservableCollection<Node>();
+
+
+                foreach (var node in SelectedNodes)
+                    tempCollection.Add(node);
+                ShowElementsAfterTransformation();
+         
+            }
+
+            if (e.Key == Key.V && (Keyboard.Modifiers == ModifierKeys.Control))
+            {
+
+                if (tempCollection == null) return;
+                if (tempCollection.Count == 0) return;
+
+                var bBox = Node.GetBoundingBoxOfNodes(tempCollection.ToList());
+
+                var copyPoint = new Point(bBox.Left + bBox.Size.Width / 2, bBox.Top + bBox.Size.Height / 2);
+                var pastePoint = Mouse.GetPosition(this);
+
+                var delta = Point.Subtract(pastePoint, copyPoint);
+
+                UnselectAllElements();
+
+                var alreadyClonedConnectors = new List<Connector>();
+                var copyConnections = new List<CopyConnection>();
+
+                // copy nodes from clipboard to canvas
+                foreach (var node in tempCollection)
+                {
+                    var newNode = node.Clone();
+
+                    newNode.Left += delta.X;
+                    newNode.Top += delta.Y;
+
+                    newNode.Left = Convert.ToInt32(newNode.Left);
+                    newNode.Top = Convert.ToInt32(newNode.Top);
+
+                    newNode.Show();
+
+                    copyConnections.Add(new CopyConnection { NewNode = newNode, OldNode = node });
+
+                }
+
+                foreach (var cc in copyConnections)
+                {
+                    var counter = 0;
+
+                    foreach (var conn in cc.OldNode.InputPorts)
+                    {
+                        foreach (var connector in conn.ConnectedConnectors)
+                        {
+                            if (!alreadyClonedConnectors.Contains(connector))
+                            {
+                                Connector newConnector = null;
+
+                                // start and end node are contained in selection
+                                if (tempCollection.Contains(connector.StartPort.ParentNode))
+                                {
+                                    var cc2 =
+                                        copyConnections.FirstOrDefault(
+                                            i => Equals(i.OldNode, connector.StartPort.ParentNode));
+
+                                    if (cc2 != null)
+                                    {
+                                        newConnector = new Connector(this, cc2.NewNode.OutputPorts[0],
+                                            cc.NewNode.InputPorts[counter]);
+                                    }
+                                }
+                                // only end node is contained in selection
+                                else
+                                {
+                                    newConnector = new Connector(this, connector.StartPort,
+                                        cc.NewNode.InputPorts[counter]);
+                                }
+
+                                if (newConnector != null)
+                                {
+                                    alreadyClonedConnectors.Add(connector);
+                                    ConnectorCollection.Add(newConnector);
+                                }
+                            }
+                        }
+                        counter++;
+                    }
+                }
+                ShowElementsAfterTransformation();
+               
+            }
+
+            if (e.Key == Key.Delete)
+            {
+                foreach (var node in SelectedNodes)
+                    node.Delete();
+
+                foreach (var conn in SelectedConnectors)
+                {
+                    conn.Delete();
+                }
+
+                SelectedNodes.Clear();
+                SelectedConnectors.Clear();
+               
+
+            }
+
+            if (Key.G == e.Key && (Keyboard.Modifiers == ModifierKeys.Control))
+            {
+                if (Keyboard.Modifiers == ModifierKeys.Control)
+                 GroupNodes();
+
+            }
+
+            else
+            {
+
+                var vector = new Vector();
+
+                switch (e.Key)
+                {
+                    case Key.Left:
+                        {
+                            vector = new Vector(1, 0);
+                        }
+                        break;
+                    case Key.Right:
+                        {
+                            vector = new Vector(-1, 0);
+                        }
+                        break;
+                    case Key.Up:
+                        {
+                            vector = new Vector(0, 1);
+                        }
+                        break;
+                    case Key.Down:
+                        {
+                            vector = new Vector(0, -1);
+                        }
+                        break;
+                        //case Key.LeftCtrl:
+                        //    HideElementsForTransformation();
+                        //    break;
+                        //case Key.RightCtrl:
+                        //    HideElementsForTransformation();
+                        //    break;
+                }
+
+                if (vector.X == 0 && vector.Y == 0)
+                    return;
+                double factor = 5;
+
+                foreach (var node in NodeCollection)
+                {
+                    node.Left += vector.X * factor;
+                    node.Top += vector.Y * factor;
+                }
+            }
+
+            //else if (e.Key == Key.LeftCtrl || e.Key == Key.LeftCtrl)
+            //{
+            //    ShowElementsAfterTransformation();
+            //    return;
+            //}
+
+            //switch (e.Key)
+            //{
+            //    case Key.RightAlt:
+
+            //        break;
+            //    case Key.Delete:
+
+            //        foreach (var node in SelectedNodes)
+            //            node.Delete();
+
+            //        foreach (var conn in SelectedConnectors)
+            //        {
+            //            conn.Delete();
+            //        }
+
+            //        SelectedNodes.Clear();
+            //        SelectedConnectors.Clear();
+            //        break;
+            //    case Key.C:
+            //    {
+            //            if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
+            //            {
+
+            //            tempCollection = new TrulyObservableCollection<Node>();
+
+
+            //            foreach (var node in SelectedNodes)
+            //                tempCollection.Add(node);
+            //        }
+            //    }
+            //        break;
+            //    case Key.V:
+            //    {
+            //            if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
+            //            {
+            //            if (tempCollection == null) return;
+            //            if (tempCollection.Count == 0) return;
+
+            //            var bBox = Node.GetBoundingBoxOfNodes(tempCollection.ToList());
+
+            //            var copyPoint = new Point(bBox.Left + bBox.Size.Width/2, bBox.Top + bBox.Size.Height/2);
+            //            var pastePoint = Mouse.GetPosition(this);
+
+            //            var delta = Point.Subtract(pastePoint, copyPoint);
+
+            //            UnselectAllElements();
+
+            //            var alreadyClonedConnectors = new List<Connector>();
+            //            var copyConnections = new List<CopyConnection>();
+
+            //            // copy nodes from clipboard to canvas
+            //            foreach (var node in tempCollection)
+            //            {
+            //                var newNode = node.Clone();
+
+            //                newNode.Left += delta.X;
+            //                newNode.Top += delta.Y;
+
+            //                newNode.Left = Convert.ToInt32(newNode.Left);
+            //                newNode.Top = Convert.ToInt32(newNode.Top);
+
+            //                newNode.Show();
+
+            //                copyConnections.Add(new CopyConnection {NewNode = newNode, OldNode = node});
+
+            //            }
+
+            //            foreach (var cc in copyConnections)
+            //            {
+            //                var counter = 0;
+
+            //                foreach (var conn in cc.OldNode.InputPorts)
+            //                {
+            //                    foreach (var connector in conn.ConnectedConnectors)
+            //                    {
+            //                        if (!alreadyClonedConnectors.Contains(connector))
+            //                        {
+            //                            Connector newConnector = null;
+
+            //                            // start and end node are contained in selection
+            //                            if (tempCollection.Contains(connector.StartPort.ParentNode))
+            //                            {
+            //                                var cc2 =
+            //                                    copyConnections.FirstOrDefault(
+            //                                        i => Equals(i.OldNode, connector.StartPort.ParentNode));
+
+            //                                if (cc2 != null)
+            //                                {
+            //                                    newConnector = new Connector(this, cc2.NewNode.OutputPorts[0],
+            //                                        cc.NewNode.InputPorts[counter]);
+            //                                }
+            //                            }
+            //                            // only end node is contained in selection
+            //                            else
+            //                            {
+            //                                newConnector = new Connector(this, connector.StartPort,
+            //                                    cc.NewNode.InputPorts[counter]);
+            //                            }
+
+            //                            if (newConnector != null)
+            //                            {
+            //                                alreadyClonedConnectors.Add(connector);
+            //                                ConnectorCollection.Add(newConnector);
+            //                            }
+            //                        }
+            //                    }
+            //                    counter++;
+            //                }
+            //            }
+            //        }
+            //    }
+            //        break;
+            //    case Key.G:
+            //    {
+            //        if (Keyboard.Modifiers == ModifierKeys.Control)
+            //            GroupNodes();
+            //    }
+            //        break;
+
+            //    case Key.S:
+            //    {
+            //        if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
+            //            SaveFile();
+            //    }
+            //        break;
+            //    case Key.T:
+            //    {
+            //        Console.WriteLine("T");
+            //        foreach (var node in NodeCollection)
+            //        {
+            //            Console.WriteLine(node.ActualWidth);
+            //            Console.WriteLine(node.ActualHeight);
+            //        }
+            //    }
+            //        break;
+            //    case Key.O:
+            //    {
+            //            if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
+            //                OpenFile();
+            //    }
+            //        break;
+            //    case Key.A:
+            //    {
+            //            if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
+            //            {
+            //            SelectedNodes.Clear();
+
+            //            foreach (var node in NodeCollection)
+            //            {
+            //                node.IsSelected = true;
+            //                SelectedNodes.Add(node);
+            //            }
+            //        }
+            //    }
+            //        break;
+            //    case Key.Escape:
+            //    {
+            //        UnselectAllElements();
+            //        mouseMode = MouseMode.Nothing;
+            //    }
+            //        break;
+            //    case Key.LeftCtrl:
+            //        if (!((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)) ShowElementsAfterTransformation();
+            //        break;
+            //    case Key.RightCtrl:
+            //        if (!((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)) ShowElementsAfterTransformation();
+            //        break;
+            //}
         }
 
         public void NewFile()
@@ -936,12 +1280,12 @@ namespace TUM.CMS.VplControl.Core
                     vector = new Vector(0, -1);
                 }
                     break;
-                case Key.LeftCtrl:
-                    HideElementsForTransformation();
-                    break;
-                case Key.RightCtrl:
-                    HideElementsForTransformation();
-                    break;
+                //case Key.LeftCtrl:
+                //    HideElementsForTransformation();
+                //    break;
+                //case Key.RightCtrl:
+                //    HideElementsForTransformation();
+                //    break;
             }
 
             if (vector.X == 0 && vector.Y == 0)

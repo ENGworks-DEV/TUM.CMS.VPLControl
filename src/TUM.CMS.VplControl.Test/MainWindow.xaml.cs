@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
+using System.Windows.Input;
 using TUM.CMS.VplControl.Core;
 using TUM.CMS.VplControl.Utilities;
 
@@ -16,13 +17,6 @@ namespace TUM.CMS.VplControl.Test
         public MainWindow()
         {
             InitializeComponent();
-
-            KeyDown += VplControl.VplControl_KeyDown;
-            KeyUp += VplControl.VplControl_KeyUp;
-
-            KeyDown += VplGroupControl.MainVplControl.VplControl_KeyDown;
-            KeyUp += VplGroupControl.MainVplControl.VplControl_KeyUp;
-
             Loaded += OnLoaded;
 
             VplGroupControl.MainVplControl.ExternalNodeTypes.AddRange(
@@ -32,6 +26,38 @@ namespace TUM.CMS.VplControl.Test
             VplGroupControl.MainVplControl.NodeTypeMode = NodeTypeModes.All;
         }
 
+        private void btnCopy_Click(object sender, RoutedEventArgs e)
+        {
+            VplControl.VplControlCopy();
+        }
+
+        private void BtnDelete_Click(object sender, RoutedEventArgs e)
+        {
+            VplControl.VplControlDelete();
+        }
+
+        private void BtnAll_Click(object sender, RoutedEventArgs e)
+        {
+            VplControl.VplControlSelectAll();
+        }
+
+        private void btnUnselect_Click(object sender, RoutedEventArgs e)
+        {
+            VplControl.VplControlUnselectAll();
+        }
+
+        private void BtnGroup_Click(object sender, RoutedEventArgs e)
+        {
+            VplControl.VplControlGroup();
+        }
+
+
+        private void BtnPaste_Click(object sender, RoutedEventArgs e)
+        {
+            VplControl.VplControlPaste();
+        }
+
+
         private void OnLoaded(object sender, RoutedEventArgs routedEventArgs)
         {
             var filePath = @"../testdata/test.vplxml";
@@ -40,6 +66,11 @@ namespace TUM.CMS.VplControl.Test
                 VplControl.OpenFile(filePath);
                 //VplGroupControl.MainVplControl.OpenFile(filePath);
             }
+        }
+
+        private void CommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+
         }
     }
 }
