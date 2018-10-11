@@ -33,14 +33,13 @@
     <Grid>
         <TabControl>
             <TabItem Header="Project">
-                <core:VplControl Name="VplControl" ClipToBounds="True"  >
+                <Viewbox Stretch="UniformToFill">
+                <core:VplControl Name="VplControl" Focusable="True" ClipToBounds="false" Width="1400" Height="1200" >
                     <core:VplControl.RenderTransform>
-
-                        <ScaleTransform x:Name="ScaleT">
-                            
-                        </ScaleTransform>
-                    </core:VplControl.RenderTransform>
+                            <ScaleTransform x:Name="ScaleT"></ScaleTransform>
+                        </core:VplControl.RenderTransform>
                 </core:VplControl>
+                </Viewbox>
             </TabItem>
             <TabItem Header="Group_1">
                 <core:VplGroupControl Name="VplGroupControl"  />
