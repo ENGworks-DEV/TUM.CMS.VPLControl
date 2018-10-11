@@ -22,7 +22,7 @@ namespace TUM.CMS.VplControl.Test
             VplGroupControl.MainVplControl.ExternalNodeTypes.AddRange(
                 Utilities.Utilities.GetTypesInNamespace(Assembly.GetExecutingAssembly(), "TUM.CMS.VplControl.Test.Nodes")
                     .ToList());
-
+            
             VplGroupControl.MainVplControl.NodeTypeMode = NodeTypeModes.All;
         }
 
@@ -57,7 +57,20 @@ namespace TUM.CMS.VplControl.Test
             VplControl.VplControlPaste();
         }
 
-
+        const double ScaleRate = 1.1;
+        private void Canvas_MouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            if (e.Delta > 0)
+            {
+                ScaleT.ScaleX *= ScaleRate;
+                ScaleT.ScaleY *= ScaleRate;
+            }
+            else
+            {
+                ScaleT.ScaleX /= ScaleRate;
+                ScaleT.ScaleY /= ScaleRate;
+            }
+        }
         private void OnLoaded(object sender, RoutedEventArgs routedEventArgs)
         {
             var filePath = @"../testdata/test.vplxml";

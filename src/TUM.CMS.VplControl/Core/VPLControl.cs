@@ -42,8 +42,8 @@ namespace TUM.CMS.VplControl.Core
         internal Port TempStartPort;
         private Double _ScaleXMax = 4.0;
         private Double _ScaleYMax = 4.0;
-        private Double _ScaleXMin = 0.5;
-        private Double _ScaleYMin = 0.5;
+        private Double _ScaleXMin = 0.1;
+        private Double _ScaleYMin = 0.1;
         public VplControl()
         {
             if (!DesignerProperties.GetIsInDesignMode(this))
@@ -508,7 +508,7 @@ namespace TUM.CMS.VplControl.Core
                 return;
 
             double vScaleX = ScaleTransform.ScaleX + zoom;
-            double vScaleY = (ScaleTransform.ScaleY + zoom) * (this.ActualHeight * 100 / this.ActualWidth / 100);
+            double vScaleY = (ScaleTransform.ScaleY + zoom);// * (this.ActualHeight * 100 / this.ActualWidth / 100);
 
 
             if (IsValidZoom(vScaleX, vScaleY)) {
