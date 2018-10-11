@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using TUM.CMS.VplControl.Core;
@@ -19,7 +20,8 @@ namespace TUM.CMS.VplControl.Test
         {
             InitializeComponent();
             Loaded += OnLoaded;
-
+            
+            VplControl.Height = this.Height;
             VplGroupControl.MainVplControl.ExternalNodeTypes.AddRange(
                 Utilities.Utilities.GetTypesInNamespace(Assembly.GetExecutingAssembly(), "TUM.CMS.VplControl.Test.Nodes")
                     .ToList());
@@ -60,54 +62,23 @@ namespace TUM.CMS.VplControl.Test
         }
 
         const double ScaleRate = 1.1;
+
         private void Canvas_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-        
-            if (e.Delta > 0 && (ScaleT.ScaleX * ScaleRate) < 1)
-            {
-                Point position = e.GetPosition(this);
-                ScaleT.CenterX += e.GetPosition(VplControl).X;
-                ScaleT.CenterY += e.GetPosition(VplControl).Y;
-                ScaleT.ScaleX *= ScaleRate;
-                ScaleT.ScaleY *= ScaleRate;
 
-                VplControl.Width /= ScaleRate;
-                VplControl.Height /=ScaleRate;
-                Point cursorpos = Mouse.GetPosition(this);
+            var element = sender as UIElement;
+            var position = e.GetPosition(this.VplControl);
 
-                double discrepancyX = cursorpos.X - position.X;
-                double discrepancyY = cursorpos.Y - position.Y;
+            VplControl.WorkspaceElements.Add( VplControl.NodeCollection);
 
-                var panTransform=  VplControl.TranslateTransform;
-                panTransform.X += discrepancyX;
-                panTransform.Y += discrepancyY;
-            }
+            var transform = VplControl.TransformToDescendant(VplControl.NodeCollection[0]);
+            var matrix = trans.Matrix;
+            var scale = e.Delta >= 0 ? 1.1 : (1.0 / 1.1); // choose appropriate scaling factor
 
-            //}
-            else if (e.Delta < 0)
-            {
-                Point position = e.GetPosition(this);
-
-                ScaleT.CenterX = e.GetPosition(this).X;
-                ScaleT.CenterY = e.GetPosition(this).Y;
-                ScaleT.ScaleX /= ScaleRate;
-                ScaleT.ScaleY /= ScaleRate;
-                VplControl.Width *= ScaleRate;
-                VplControl.Height *= ScaleRate;
-
-
-                Point cursorpos = Mouse.GetPosition(this);
-
-                double discrepancyX = cursorpos.X - position.X;
-                double discrepancyY = cursorpos.Y - position.Y;
-
-                var panTransform = VplControl.TranslateTransform;
-                panTransform.X += discrepancyX;
-                panTransform.Y += discrepancyY;
-
-            }
-            VplControl.UpdateLayout();
-
+            matrix.ScaleAtPrepend(scale, scale, position.X, position.Y);
+            matrix.TranslatePrepend(position.X, position.Y);
+            transform.Matrix = matrix;
+            
         }
 
         //private void Canvas_MouseWheel(object sender, MouseWheelEventArgs e)
@@ -132,6 +103,8 @@ namespace TUM.CMS.VplControl.Test
                 //VplGroupControl.MainVplControl.OpenFile(filePath);
             }
         }
+
+       
 
         private void CommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
         {
