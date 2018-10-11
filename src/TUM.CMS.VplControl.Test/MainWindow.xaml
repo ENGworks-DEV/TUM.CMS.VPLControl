@@ -33,9 +33,12 @@
     <Grid>
         <TabControl>
             <TabItem Header="Project">
-                <core:VplControl Name="VplControl" ClipToBounds="True" >
+                <core:VplControl Name="VplControl" ClipToBounds="True"  >
                     <core:VplControl.RenderTransform>
-                        <ScaleTransform x:Name="ScaleT"></ScaleTransform>
+
+                        <ScaleTransform x:Name="ScaleT">
+                            
+                        </ScaleTransform>
                     </core:VplControl.RenderTransform>
                 </core:VplControl>
             </TabItem>

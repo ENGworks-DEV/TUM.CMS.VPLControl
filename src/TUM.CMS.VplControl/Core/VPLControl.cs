@@ -61,7 +61,7 @@ namespace TUM.CMS.VplControl.Core
                 Style = FindResource("VplControlStyle") as Style;
                 GraphFlowDirection = GraphFlowDirections.Vertical;
 
-                KeyDown += VplControl_KeyDown;
+               // KeyDown += VplControl_KeyDown;
                 //KeyUp += VplControl_KeyUp;
 
                 ScaleTransform.Changed += ScaleTransformOnChanged;
@@ -496,62 +496,62 @@ namespace TUM.CMS.VplControl.Core
             TempLine = null;
         }
 
-        protected override void HandleMouseWheel(object sender, MouseWheelEventArgs e)
-        {
-            if (!((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)) return;
+        //protected override void HandleMouseWheel(object sender, MouseWheelEventArgs e)
+        //{
+        //    if (!((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)) return;
 
-            mouseMode = MouseMode.Zooming;
+        //    mouseMode = MouseMode.Zooming;
 
-            var zoom = e.Delta > 0 ? .2 : -.2;
+        //    var zoom = e.Delta > 0 ? .2 : -.2;
 
-            if (!(e.Delta > 0) && (ScaleTransform.ScaleX < .4 || ScaleTransform.ScaleY < .4))
-                return;
+        //    if (!(e.Delta > 0) && (ScaleTransform.ScaleX < .4 || ScaleTransform.ScaleY < .4))
+        //        return;
 
-            double vScaleX = ScaleTransform.ScaleX + zoom;
-            double vScaleY = (ScaleTransform.ScaleY + zoom);// * (this.ActualHeight * 100 / this.ActualWidth / 100);
+        //    double vScaleX = ScaleTransform.ScaleX + zoom;
+        //    double vScaleY = (ScaleTransform.ScaleY + zoom);// * (this.ActualHeight * 100 / this.ActualWidth / 100);
 
 
-            if (IsValidZoom(vScaleX, vScaleY)) {
-                var elementsToZoom = new List<UIElement>();
-                elementsToZoom.AddRange(Children.OfType<Border>());
-                elementsToZoom.AddRange(Children.OfType<Ellipse>());
-                elementsToZoom.AddRange(Children.OfType<Path>());
+        //    if (IsValidZoom(vScaleX, vScaleY)) {
+        //        var elementsToZoom = new List<UIElement>();
+        //        elementsToZoom.AddRange(Children.OfType<Border>());
+        //        elementsToZoom.AddRange(Children.OfType<Ellipse>());
+        //        elementsToZoom.AddRange(Children.OfType<Path>());
 
-                foreach (var element in elementsToZoom) {
-                    element.UpdateLayout();
+        //        foreach (var element in elementsToZoom) {
+        //            element.UpdateLayout();
 
-                    var position = e.GetPosition(element);
-                    double width = 0;
-                    double height = 0;
+        //            var position = e.GetPosition(element);
+        //            double width = 0;
+        //            double height = 0;
 
-                    if (element is Border) {
-                        var border = element as Border;
+        //            if (element is Border) {
+        //                var border = element as Border;
 
-                        width = border.ActualWidth;
-                        height = border.ActualHeight;
-                    } else if (element is Ellipse) {
-                        var ellipse = element as Ellipse;
+        //                width = border.ActualWidth;
+        //                height = border.ActualHeight;
+        //            } else if (element is Ellipse) {
+        //                var ellipse = element as Ellipse;
 
-                        width = ellipse.ActualWidth;
-                        height = ellipse.ActualHeight;
-                    } else if (element is Path) {
-                        var path = element as Path;
+        //                width = ellipse.ActualWidth;
+        //                height = ellipse.ActualHeight;
+        //            } else if (element is Path) {
+        //                var path = element as Path;
 
-                        width = path.ActualWidth;
-                        height = path.ActualHeight;
-                    }
+        //                width = path.ActualWidth;
+        //                height = path.ActualHeight;
+        //            }
 
-                    if (width > 0 && height > 0) {
-                        element.RenderTransformOrigin = new Point(position.X / width, position.Y / height);
-                    }
-                }
+        //            if (width > 0 && height > 0) {
+        //                element.RenderTransformOrigin = new Point(position.X / width, position.Y / height);
+        //            }
+        //        }
 
-                ScaleTransform.ScaleX += zoom;
-                ScaleTransform.ScaleY += zoom;
+        //        ScaleTransform.ScaleX += zoom;
+        //        ScaleTransform.ScaleY += zoom;
 
-            }
-            mouseMode = MouseMode.Nothing;
-        }
+        //    }
+        //    mouseMode = MouseMode.Nothing;
+        //}
 
 
         protected override void HandleMouseUp(object sender, MouseButtonEventArgs e)

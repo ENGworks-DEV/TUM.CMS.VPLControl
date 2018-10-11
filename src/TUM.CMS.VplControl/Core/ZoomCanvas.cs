@@ -19,7 +19,7 @@ namespace TUM.CMS.VplControl.Core
 
         public ZoomCanvas()
         {
-            MouseWheel += HandleMouseWheel;
+            //MouseWheel += HandleMouseWheel;
             MouseDown += HandleMouseDown;
             MouseUp += HandleMouseUp;
             MouseMove += HandleMouseMove;
@@ -57,24 +57,24 @@ namespace TUM.CMS.VplControl.Core
 
         #region Events
 
-        protected virtual void HandleMouseWheel(object sender, MouseWheelEventArgs e)
-        {
-            var zoom = e.Delta > 0 ? .2 : -.2;
+        //protected virtual void HandleMouseWheel(object sender, MouseWheelEventArgs e)
+        //{
+        //    var zoom = e.Delta > 0 ? .2 : -.2;
 
-            if (!(e.Delta > 0) && (ScaleTransform.ScaleX < .4 || ScaleTransform.ScaleY < .4))
-                return;
+        //    if (!(e.Delta > 0) && (ScaleTransform.ScaleX < .4 || ScaleTransform.ScaleY < .4))
+        //        return;
 
-            foreach (Border child in Children)
-            {
-                child.UpdateLayout();
+        //    foreach (Border child in Children)
+        //    {
+        //        child.UpdateLayout();
 
-                var position = e.GetPosition(child);
-                child.RenderTransformOrigin = new Point(position.X/child.ActualWidth, position.Y/child.ActualHeight);
-            }
+        //        var position = e.GetPosition(child);
+        //        child.RenderTransformOrigin = new Point(position.X/child.ActualWidth, position.Y/child.ActualHeight);
+        //    }
 
-            ScaleTransform.ScaleX += zoom;
-            ScaleTransform.ScaleY += zoom;
-        }
+        //    ScaleTransform.ScaleX += zoom;
+        //    ScaleTransform.ScaleY += zoom;
+        //}
 
         protected virtual void HandleMouseDown(object sender, MouseButtonEventArgs e)
         {

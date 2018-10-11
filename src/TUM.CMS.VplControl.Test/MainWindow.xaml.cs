@@ -22,7 +22,8 @@ namespace TUM.CMS.VplControl.Test
             VplGroupControl.MainVplControl.ExternalNodeTypes.AddRange(
                 Utilities.Utilities.GetTypesInNamespace(Assembly.GetExecutingAssembly(), "TUM.CMS.VplControl.Test.Nodes")
                     .ToList());
-            
+           this.MouseWheel += Canvas_MouseWheel;
+          
             VplGroupControl.MainVplControl.NodeTypeMode = NodeTypeModes.All;
         }
 
@@ -60,16 +61,48 @@ namespace TUM.CMS.VplControl.Test
         const double ScaleRate = 1.1;
         private void Canvas_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-            if (e.Delta > 0)
-            {
-                ScaleT.ScaleX *= ScaleRate;
-                ScaleT.ScaleY *= ScaleRate;
+            //if (ScaleT.ScaleX < 1.1)
+            //{
+            Point point = new Point(ScaleT.CenterX - e.GetPosition(this).X, ScaleT.CenterY - e.GetPosition(this).Y);
+                if (e.Delta > 0 && (ScaleT.ScaleX* ScaleRate) < 1)
+                {
+                    
+            
+                    //ScaleT.CenterX = e.GetPosition(this).X;
+                    //ScaleT.CenterY = e.GetPosition(this).Y;
+
+                    ScaleT.ScaleX *= ScaleRate;
+                    ScaleT.ScaleY *= ScaleRate;
+                    
+                    VplControl.Width = VplControl.ActualWidth / ScaleRate;
+                    VplControl.Height = VplControl.ActualHeight / ScaleRate;
+                    //VplControl.TranslateTransform.X = point.X;
+                    //VplControl.TranslateTransform.Y = point.Y;
+
             }
-            else
-            {
+            //if (e.Delta > 0 && ScaleT.ScaleX > 0.9)
+            //{
+
+            //    ScaleT.CenterX = e.GetPosition(this).X;
+            //    ScaleT.CenterY = e.GetPosition(this).Y;
+            //    ScaleT.ScaleX *= ScaleRate;
+            //    ScaleT.ScaleY *= ScaleRate;
+
+            //}
+            else if(e.Delta < 0 )
+                {
+                VplControl.TranslateTransform.X = e.GetPosition(this).X;
+                VplControl.TranslateTransform.Y = e.GetPosition(this).Y;
                 ScaleT.ScaleX /= ScaleRate;
                 ScaleT.ScaleY /= ScaleRate;
+                VplControl.Width = (VplControl.RenderSize.Width * ScaleRate);
+                    VplControl.Height = (VplControl.RenderSize.Height * ScaleRate);
+
+                //VplControl.TranslateTransform.X = 0;
+                //VplControl.TranslateTransform.Y = 0;
             }
+            //}
+
         }
         private void OnLoaded(object sender, RoutedEventArgs routedEventArgs)
         {
