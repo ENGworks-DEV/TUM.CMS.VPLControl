@@ -18,6 +18,7 @@ namespace TUM.CMS.VplControl.Test
         public MainWindow()
         {
             InitializeComponent();
+            
             Loaded += OnLoaded;
 
             VplGroupControl.MainVplControl.ExternalNodeTypes.AddRange(
@@ -26,6 +27,27 @@ namespace TUM.CMS.VplControl.Test
            this.MouseWheel += Canvas_MouseWheel;
           
             VplGroupControl.MainVplControl.NodeTypeMode = NodeTypeModes.All;
+          
+
+
+        }
+
+        protected override void OnContentRendered(EventArgs e)
+        {
+            this.VplControl.Width = ViewBox.ActualWidth;
+            this.VplControl.Height = ViewBox.ActualHeight;
+            ScaleT.CenterX = ViewBox.ActualWidth / 2;
+            ScaleT.CenterY = ViewBox.ActualHeight / 2;
+            ScaleT.ScaleX = 1;
+            ScaleT.ScaleY = 1;
+            // Your code here.
+        }
+        private void onstart(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            //this.VplControl.Width = ViewBox.ActualWidth;
+            //this.VplControl.Height = ViewBox.ActualHeight;
+            //ScaleT.CenterX = 0;
+            //ScaleT.CenterY = 0;
         }
 
         private void btnCopy_Click(object sender, RoutedEventArgs e)
@@ -60,50 +82,28 @@ namespace TUM.CMS.VplControl.Test
         }
 
         const double ScaleRate = 1.1;
+        private double actualzoom ;
         private void Canvas_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-        
-            if (e.Delta > 0 && (ScaleT.ScaleX * ScaleRate) < 1)
+
+            //ScaleT.CenterX = ViewBox.ActualWidth / 2;
+            //ScaleT.CenterY = ViewBox.ActualHeight / 2;
+            if (e.Delta > 0 )
             {
-                Point position = e.GetPosition(this);
-                ScaleT.CenterX += e.GetPosition(VplControl).X;
-                ScaleT.CenterY += e.GetPosition(VplControl).Y;
-                ScaleT.ScaleX *= ScaleRate;
-                ScaleT.ScaleY *= ScaleRate;
-
-                VplControl.Width /= ScaleRate;
-                VplControl.Height /=ScaleRate;
-                Point cursorpos = Mouse.GetPosition(this);
-
-                double discrepancyX = cursorpos.X - position.X;
-                double discrepancyY = cursorpos.Y - position.Y;
-
-                var panTransform=  VplControl.TranslateTransform;
-                panTransform.X += discrepancyX;
-                panTransform.Y += discrepancyY;
+                ScaleT.ScaleX /= 1.1;
+                ScaleT.ScaleY /= 1.1;
+                VplControl.Height *= 1.1;
+                VplControl.Width *= 1.1;
+                
             }
 
-            //}
-            else if (e.Delta < 0)
+         
+            else if (e.Delta < 0 )
             {
-                Point position = e.GetPosition(this);
-
-                ScaleT.CenterX = e.GetPosition(this).X;
-                ScaleT.CenterY = e.GetPosition(this).Y;
-                ScaleT.ScaleX /= ScaleRate;
-                ScaleT.ScaleY /= ScaleRate;
-                VplControl.Width *= ScaleRate;
-                VplControl.Height *= ScaleRate;
-
-
-                Point cursorpos = Mouse.GetPosition(this);
-
-                double discrepancyX = cursorpos.X - position.X;
-                double discrepancyY = cursorpos.Y - position.Y;
-
-                var panTransform = VplControl.TranslateTransform;
-                panTransform.X += discrepancyX;
-                panTransform.Y += discrepancyY;
+                ScaleT.ScaleX *= 1.1;
+                ScaleT.ScaleY *= 1.1;
+                VplControl.Height /= 1.1;
+                VplControl.Width /=  1.1;
 
             }
             VplControl.UpdateLayout();
