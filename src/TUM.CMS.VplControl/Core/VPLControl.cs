@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -31,6 +32,9 @@ namespace TUM.CMS.VplControl.Core
     {
         private GraphFlowDirections graphFlowDirection;
         public GraphFlowDirections ImportFlowDirection;
+
+        private CompositeCollection _workspaceElements = new CompositeCollection();
+        public CompositeCollection WorkspaceElements { get { return _workspaceElements; } }
 
         private RadialContentMenu radialMenu;
         private ScaleTransform scaleTransformZooming;
@@ -705,6 +709,8 @@ namespace TUM.CMS.VplControl.Core
             ShowElementsAfterTransformation();
 
         }
+
+        
 
         /// <summary>
         /// Paste copied nodes
