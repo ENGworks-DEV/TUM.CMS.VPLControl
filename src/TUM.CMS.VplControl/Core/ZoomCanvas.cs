@@ -119,7 +119,7 @@ namespace TUM.CMS.VplControl.Core
 
         protected virtual void HandleMouseMove(object sender, MouseEventArgs e)
         {
-            var v = start - e.GetPosition(this);
+            var v = start - Mouse.GetPosition(this);
 
             if (mouseMode == MouseMode.Panning)
             {

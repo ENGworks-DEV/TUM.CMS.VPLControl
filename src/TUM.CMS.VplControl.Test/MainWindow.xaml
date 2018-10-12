@@ -3,10 +3,12 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:core="clr-namespace:TUM.CMS.VplControl.Core;assembly=TUM.CMS.VplControl"
 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
+
     x:Class="TUM.CMS.VplControl.Test.MainWindow"
     Title="MainWindow" WindowStartupLocation="CenterScreen" WindowState="Maximized">
     <Window.InputBindings>
-      
+
         <KeyBinding Key="C" Modifiers="Control" Command="Copy" />
         <KeyBinding Key="V" Modifiers="Control" Command="Paste" />
         <KeyBinding Key="Delete" Command="Delete" />
@@ -24,29 +26,38 @@
         <CommandBinding Command="Paste" Executed="BtnPaste_Click" />
         <CommandBinding Command="Delete" Executed="BtnDelete_Click" />
 
-        
+
         <CommandBinding Command="SelectAll" Executed="BtnAll_Click" />
         <!--<CommandBinding Command="Group" Executed="BtnGroup_Click" />
         <CommandBinding Command="UnselectAll"    Executed="btnUnselect_Click" />-->
 
     </Window.CommandBindings>
     <Grid>
-        <TabControl x:Name="Tab">
-            <TabItem Header="Project" >
-                <Border  x:Name="ViewBox">
-                    <Viewbox Stretch="UniformToFill">
-                <core:VplControl Name="VplControl" ClipToBounds="True"  Width="400" Height="400">
-                    <core:VplControl.RenderTransform>
-                            <ScaleTransform x:Name="ScaleT"></ScaleTransform>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition x:Name="A"/>
+            <ColumnDefinition x:Name="B"/>
+        </Grid.ColumnDefinitions>
+        <TabControl x:Name="Tab" Grid.ColumnSpan="2" Grid.RowSpan="2" Background="#FFA4A4A4" >
+            <TabItem Header="Project"  >
+
+                <Viewbox x:Name="Vbox" HorizontalAlignment="Center" ClipToBounds="True" Stretch="None" VerticalAlignment="Center" >
+
+                    <core:VplControl x:Name="VplControl" ClipToBounds="True"  Width="8000" Height="8000"  >
+                        <core:VplControl.RenderTransform>
+                            <MatrixTransform/>
                         </core:VplControl.RenderTransform>
-                </core:VplControl>
+                    </core:VplControl>
                     </Viewbox>
-                </Border>
+              
             </TabItem>
-            <TabItem Header="Group_1">
-                <core:VplGroupControl Name="VplGroupControl"  />
+            <TabItem Header="Group_1" d:IsHidden="True">
+                <core:VplGroupControl x:Name="VplGroupControl"  />
             </TabItem>
-            <TabItem Header="+" />
+            <TabItem Header="+" d:IsHidden="True" />
 
         </TabControl>
 

@@ -34,16 +34,19 @@ namespace TUM.CMS.VplControl.Test
 
         }
 
-        protected override void OnContentRendered(EventArgs e)
-        {
-            this.VplControl.Width = ViewBox.ActualWidth;
-            this.VplControl.Height = ViewBox.ActualHeight;
-            ScaleT.CenterX = ViewBox.ActualWidth / 2;
-            ScaleT.CenterY = ViewBox.ActualHeight / 2;
-            ScaleT.ScaleX = 1;
-            ScaleT.ScaleY = 1;
-            // Your code here.
-        }
+        //protected override void OnContentRendered(EventArgs e)
+        //{
+        //    this.VplControl.Width = ViewBox.ActualWidth;
+        //    this.VplControl.Height = ViewBox.ActualHeight;
+        //    var positionX = ViewBox.ActualWidth / 2;
+        //    var positionY = ViewBox.ActualHeight / 2;
+
+        //    var transform = VplControl.RenderTransform as MatrixTransform;
+        //    var matrix = transform.Matrix;
+        //    matrix.ScaleAtPrepend(1, 1, positionX, positionY);
+        //    transform.Matrix = matrix;
+        //    // Your code here.
+        //}
         private void onstart(object sender, DependencyPropertyChangedEventArgs e)
         {
             //this.VplControl.Width = ViewBox.ActualWidth;
@@ -87,125 +90,54 @@ namespace TUM.CMS.VplControl.Test
         private double actualzoom { get; set; } = 1;
         private void Canvas_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-
-            //ScaleT.CenterX = ViewBox.ActualWidth / 2;
-            //ScaleT.CenterY = ViewBox.ActualHeight / 2;
-            if (e.Delta > 0 && actualzoom > 0.6)
-            {
-
-                //Zoom out
-                ScaleT.ScaleX /= 1.1;
-                ScaleT.ScaleY /= 1.1;
-                VplControl.Height *= 1.1;
-                VplControl.Width *= 1.1;
-                actualzoom /= 1.1;
-                ScaleT.CenterX = VplControl.Width / 2;
-                ScaleT.CenterY = VplControl.Height / 2;
- 
+                var element = sender as UIElement;
                 
-                //foreach (Node item in VplControl.NodeCollection)
-                //{
-                   
-                //    Point point = e.GetPosition(item);
-                    
-                //    if (item.Border.MinHeight > 0 && item.Border.Width > 0)
-                //    {
-                //        //Zoom out
+                var transform = VplControl.RenderTransform as MatrixTransform;
+                var matrix = transform.Matrix;
+                var scale = e.Delta >= 0 ? 1.1 : (1.0 / 1.1); // choose appropriate scaling factor
+                var position = e.GetPosition(Vbox);
 
-                //        ////Center of item
-                //        //var ItemY = (item.Top);
-                //        //var ItemX = (item.Left);
-
-                        
-                //        //item.Top = ItemY-((ItemY - point.Y) /2);
-                //        //item.Left = ItemX-((ItemX - point.X)/2);
-
-                //        ////Center of item
-                //        var ItemY = (item.RenderTransformOrigin.Y);
-                //        var ItemX = (item.RenderTransformOrigin.X);
-
-                //        var middlePoint = new Point(((ItemX -  point.X) *300), ((ItemY - point.Y) / 2));
-                //        var transform = item.RenderTransform;
-                //        TranslateTransform translateTransform = new TranslateTransform();
-                //        translateTransform.X = (ItemX - point.X) / 2;
-                //        translateTransform.Y = (ItemY - point.Y) / 2;
-
-                //        transform = translateTransform;
-                //        item.SetValue(Node.RenderTransformProperty, translateTransform);
-                //    }
-                //}
-                ScaleT.ScaleX = 1;
-                ScaleT.ScaleY = 1;
-            }
-
-         
-            else if (e.Delta < 0 && actualzoom < 1.3)
             {
-
-                //Zoom in
-                ScaleT.ScaleX *= 1.1;
-                ScaleT.ScaleY *= 1.1;
-                VplControl.Height /= 1.1;
-                VplControl.Width /=  1.1;
-                actualzoom *= 1.1;
-                ScaleT.CenterX = VplControl.Width / 10;
-                ScaleT.CenterY = VplControl.Height / 10;
-
-               
-                //foreach (Node item in VplControl.NodeCollection)
-                //{
-                   
-                //    Point point = e.GetPosition(item);
-                    
-                //    if (item.Border.MinHeight > 0 && item.Border.Width >0)
-                //    {
-                //        ////Center of item
-                //        //var ItemY = (item.Top);
-                //        //var ItemX = (item.Left);
-
-                //        ////Zoom in
-                //        //item.Top = (2 * ItemY + point.Y) / 10;
-                //        //item.Left = (2* ItemX + point.X) / 10;
-
-                //        //Center of item
-                //        var ItemY = (item.RenderTransformOrigin.Y);
-                //        var ItemX = (item.RenderTransformOrigin.X);
-
-                //        var middlePoint = new Point(((ItemX + point.X) / 2), ((ItemY + point.Y) / 2));
-                //        var transform = item.RenderTransform;
-
-                //        TranslateTransform translateTransform = new TranslateTransform();
-                //        translateTransform.X = (ItemX - point.X) / 2;
-                //        translateTransform.Y = (ItemY - point.Y) / 2;
-
-                //        transform = translateTransform;
-                //        item.SetValue(Node.RenderTransformOriginProperty, middlePoint);
-                        
-                //    }
+                    //Limit scale to 1.2 - 0.5
+                    scale = (( actualzoom > 0.5 || scale == 1.1)&& (actualzoom < 1.2 || scale <1 )) ? scale: 1;
+                    matrix.ScaleAt(scale, scale, position.X, position.Y);
+                    transform.Matrix = matrix;
+                    //VplControl.Width /= scale;
+                    //VplControl.Height /= scale;
+                    actualzoom *= scale;
 
 
-                //}
-                ScaleT.ScaleX = 1;
-                ScaleT.ScaleY = 1;
 
             }
-            VplControl.UpdateLayout();
 
+            VplControl.UpdateLayout();
+            //foreach (Border item in VplControl.Children.OfType<Border>())
+            //{
+
+            //    var obj = item.Child;
+            //    var position = e.GetPosition(VplControl);
+
+            //    Point Center  =new Point( VplControl.Width /2, VplControl.Height/2) ;
+                
+            //    var type = obj.GetType();
+            //    if (obj.GetType().BaseType == typeof(Node))
+            //    {
+            //        //if(actualzoom > 0)
+            //        //{
+            //            var node = obj as Node;
+            //            Point nCurrentL = new Point(node.Top, node.Left);
+            //            Point nodeNewLocation = new Point((nCurrentL.X + Center.X)/2, (nCurrentL.Y + Center.Y) / 2);
+            //            node.Top = nodeNewLocation.Y;
+            //            node.Left = nodeNewLocation.X;
+                        
+            //        //}
+
+            //    }
+
+            //}
         }
 
-        //private void Canvas_MouseWheel(object sender, MouseWheelEventArgs e)
-        //{
-        //    var element = sender as UIElement;
-        //    var position = e.GetPosition(this.VplControl);
-        //    var transform = VplControl.RenderTransform as MatrixTransform;
-        //    var matrix = transform.Matrix;
-        //    var scale = e.Delta >= 0 ? 1.1 : (1.0 / 1.1); // choose appropriate scaling factor
 
-        //    matrix.ScaleAtPrepend(scale, scale, position.X, position.Y);
-        //    transform.Matrix = matrix;
-        //    VplControl.Width *= scale;
-        //    VplControl.Height *= scale;
-        //}
         private void OnLoaded(object sender, RoutedEventArgs routedEventArgs)
         {
             var filePath = @"../testdata/test.vplxml";
