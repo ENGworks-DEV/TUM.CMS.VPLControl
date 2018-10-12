@@ -35,7 +35,7 @@
             <TabItem Header="Project" >
                 <Border  x:Name="ViewBox">
                     <Viewbox Stretch="UniformToFill">
-                <core:VplControl Name="VplControl"  ClipToBounds="false"  Width="400" Height="400">
+                <core:VplControl Name="VplControl" ClipToBounds="True"  Width="400" Height="400">
                     <core:VplControl.RenderTransform>
                             <ScaleTransform x:Name="ScaleT"></ScaleTransform>
                         </core:VplControl.RenderTransform>
