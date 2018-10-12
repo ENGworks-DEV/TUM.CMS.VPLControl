@@ -495,6 +495,7 @@ namespace TUM.CMS.VplControl.Core
             Children.Remove(TempLine);
             TempLine = null;
         }
+        //Reuse code from this method
 
         //protected override void HandleMouseWheel(object sender, MouseWheelEventArgs e)
         //{

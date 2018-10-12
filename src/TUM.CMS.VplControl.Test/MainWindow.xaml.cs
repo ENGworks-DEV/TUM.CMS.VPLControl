@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using TUM.CMS.VplControl.Core;
@@ -91,6 +92,8 @@ namespace TUM.CMS.VplControl.Test
             //ScaleT.CenterY = ViewBox.ActualHeight / 2;
             if (e.Delta > 0 && actualzoom > 0.6)
             {
+
+                //Zoom out
                 ScaleT.ScaleX /= 1.1;
                 ScaleT.ScaleY /= 1.1;
                 VplControl.Height *= 1.1;
@@ -98,57 +101,93 @@ namespace TUM.CMS.VplControl.Test
                 actualzoom /= 1.1;
                 ScaleT.CenterX = VplControl.Width / 2;
                 ScaleT.CenterY = VplControl.Height / 2;
-                ScaleT.ScaleX =1;
-                ScaleT.ScaleY = 1;
+ 
                 
-                foreach (VplElement item in VplControl.NodeCollection)
-                {
-                    var t = VplControl.TransformToDescendant(item);
-                    Point point = Mouse.GetPosition(item);
-                    var p = t.Transform(point);
-                    if (item.Border.MinHeight > 0 && item.Border.Width > 0)
-                    {
-                        //Center of item
-                        var ItemY = (item.Top + item.Border.MinHeight / 2);
-                        var ItemX = (item.Left + item.Border.Width / 2);
+                //foreach (Node item in VplControl.NodeCollection)
+                //{
+                   
+                //    Point point = e.GetPosition(item);
+                    
+                //    if (item.Border.MinHeight > 0 && item.Border.Width > 0)
+                //    {
+                //        //Zoom out
 
-                        var middlePoint = new Point(((ItemX - p.X) / 2), ((ItemY - p.Y) / 2));
-                        var renderT = item.RenderTransformOrigin = middlePoint;
-                    }
-                }
+                //        ////Center of item
+                //        //var ItemY = (item.Top);
+                //        //var ItemX = (item.Left);
+
+                        
+                //        //item.Top = ItemY-((ItemY - point.Y) /2);
+                //        //item.Left = ItemX-((ItemX - point.X)/2);
+
+                //        ////Center of item
+                //        var ItemY = (item.RenderTransformOrigin.Y);
+                //        var ItemX = (item.RenderTransformOrigin.X);
+
+                //        var middlePoint = new Point(((ItemX -  point.X) *300), ((ItemY - point.Y) / 2));
+                //        var transform = item.RenderTransform;
+                //        TranslateTransform translateTransform = new TranslateTransform();
+                //        translateTransform.X = (ItemX - point.X) / 2;
+                //        translateTransform.Y = (ItemY - point.Y) / 2;
+
+                //        transform = translateTransform;
+                //        item.SetValue(Node.RenderTransformProperty, translateTransform);
+                //    }
+                //}
+                ScaleT.ScaleX = 1;
+                ScaleT.ScaleY = 1;
             }
 
          
             else if (e.Delta < 0 && actualzoom < 1.3)
             {
+
+                //Zoom in
                 ScaleT.ScaleX *= 1.1;
                 ScaleT.ScaleY *= 1.1;
                 VplControl.Height /= 1.1;
                 VplControl.Width /=  1.1;
                 actualzoom *= 1.1;
-                ScaleT.CenterX = VplControl.Width / 2;
-                ScaleT.CenterY = VplControl.Height / 2;
+                ScaleT.CenterX = VplControl.Width / 10;
+                ScaleT.CenterY = VplControl.Height / 10;
+
+               
+                //foreach (Node item in VplControl.NodeCollection)
+                //{
+                   
+                //    Point point = e.GetPosition(item);
+                    
+                //    if (item.Border.MinHeight > 0 && item.Border.Width >0)
+                //    {
+                //        ////Center of item
+                //        //var ItemY = (item.Top);
+                //        //var ItemX = (item.Left);
+
+                //        ////Zoom in
+                //        //item.Top = (2 * ItemY + point.Y) / 10;
+                //        //item.Left = (2* ItemX + point.X) / 10;
+
+                //        //Center of item
+                //        var ItemY = (item.RenderTransformOrigin.Y);
+                //        var ItemX = (item.RenderTransformOrigin.X);
+
+                //        var middlePoint = new Point(((ItemX + point.X) / 2), ((ItemY + point.Y) / 2));
+                //        var transform = item.RenderTransform;
+
+                //        TranslateTransform translateTransform = new TranslateTransform();
+                //        translateTransform.X = (ItemX - point.X) / 2;
+                //        translateTransform.Y = (ItemY - point.Y) / 2;
+
+                //        transform = translateTransform;
+                //        item.SetValue(Node.RenderTransformOriginProperty, middlePoint);
+                        
+                //    }
+
+
+                //}
                 ScaleT.ScaleX = 1;
                 ScaleT.ScaleY = 1;
 
-               
-                foreach (VplElement item in VplControl.NodeCollection)
-                {
-                    var t = VplControl.TransformToDescendant(item);
-                    Point point = Mouse.GetPosition(item);
-                    var p = t.Transform(point);
-                    if (item.Border.MinHeight > 0 && item.Border.Width >0)
-                    {
-                        //Center of item
-                        var ItemY = (item.Top + item.Border.MinHeight / 2);
-                        var ItemX = (item.Left + item.Border.Width / 2);
-
-                        var middlePoint = new Point((ItemX + p.X) / 2, (ItemY + p.Y) / 2);
-                        var renderT = item.RenderTransformOrigin = middlePoint;
-                    }
-
-
-                }
             }
             VplControl.UpdateLayout();
 
