@@ -265,11 +265,6 @@ namespace TUM.CMS.VplControl.Core
         {
             if (Math.Abs(ScaleTransform.ScaleX - ScaleTransform.ScaleY) > 0.0001) return;
 
-            //Theme.ConnectorThickness = 2*ScaleTransform.ScaleX;
-            //Theme.PortSize = 20*ScaleTransform.ScaleX/2;
-            //Theme.PortStrokeThickness = 1.5*ScaleTransform.ScaleX/2;
-            //Theme.ConnEllipseSize = 14*ScaleTransform.ScaleX;
-            //Theme.LineThickness = 1.5*ScaleTransform.ScaleX;
 
             foreach (var node in NodeCollection)
             {
@@ -293,7 +288,7 @@ namespace TUM.CMS.VplControl.Core
                         }
                         else
                         {
-                            //// left singe click in empty space of canvas
+                            //// TODO: Fix selection rectangle
                             //startSelectionRectanglePoint = Mouse.GetPosition(this);
                             //mouseMode = MouseMode.PreSelectionRectangle;
                             //SplineMode = SplineModes.Nothing;

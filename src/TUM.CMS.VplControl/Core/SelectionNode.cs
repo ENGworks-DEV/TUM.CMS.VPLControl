@@ -142,7 +142,7 @@ namespace TUM.CMS.VplControl.Core
             var selectedType = listBox.SelectedItem as Type;
             if (selectedType == null) return;
 
-            var node = (Node) Activator.CreateInstance(selectedType, HostCanvas);
+            var node = (Node)Activator.CreateInstance(selectedType, HostCanvas);
 
             node.Left = Left;
             node.Top = Top;
@@ -159,7 +159,7 @@ namespace TUM.CMS.VplControl.Core
 
         public override Node Clone()
         {
-            return (Node) MemberwiseClone();
+            return (Node)MemberwiseClone();
         }
     }
 }

@@ -1,17 +1,14 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using TUM.CMS.VplControl.Core;
-using TUM.CMS.VplControl.Utilities;
 
 namespace TUM.CMS.VplControl.Test
 {
-   
+
     /// <summary>
     ///     Interaction logic for MainWindow.xaml
     /// </summary>
@@ -20,41 +17,21 @@ namespace TUM.CMS.VplControl.Test
         public MainWindow()
         {
             InitializeComponent();
-            
+
             Loaded += OnLoaded;
 
             VplGroupControl.MainVplControl.ExternalNodeTypes.AddRange(
                 Utilities.Utilities.GetTypesInNamespace(Assembly.GetExecutingAssembly(), "TUM.CMS.VplControl.Test.Nodes")
                     .ToList());
-           this.MouseWheel += Canvas_MouseWheel;
+            this.MouseWheel += Canvas_MouseWheel;
 
             this.VplControl.SizableParent = Tab;
             VplGroupControl.MainVplControl.NodeTypeMode = NodeTypeModes.All;
-          
+
 
 
         }
 
-        //protected override void OnContentRendered(EventArgs e)
-        //{
-        //    this.VplControl.Width = ViewBox.ActualWidth;
-        //    this.VplControl.Height = ViewBox.ActualHeight;
-        //    var positionX = ViewBox.ActualWidth / 2;
-        //    var positionY = ViewBox.ActualHeight / 2;
-
-        //    var transform = VplControl.RenderTransform as MatrixTransform;
-        //    var matrix = transform.Matrix;
-        //    matrix.ScaleAtPrepend(1, 1, positionX, positionY);
-        //    transform.Matrix = matrix;
-        //    // Your code here.
-        //}
-        private void onstart(object sender, DependencyPropertyChangedEventArgs e)
-        {
-            //this.VplControl.Width = ViewBox.ActualWidth;
-            //this.VplControl.Height = ViewBox.ActualHeight;
-            //ScaleT.CenterX = 0;
-            //ScaleT.CenterY = 0;
-        }
 
         private void btnCopy_Click(object sender, RoutedEventArgs e)
         {
@@ -93,20 +70,20 @@ namespace TUM.CMS.VplControl.Test
         private void Canvas_MouseWheel(object sender, MouseWheelEventArgs e)
         {
             //Performing Matrix scale
-                var element = sender as UIElement;
-                
-                var transform = VplControl.RenderTransform as MatrixTransform;
-                var matrix = transform.Matrix;
-                var scale = e.Delta >= 0 ? 1.1 : (1.0 / 1.1); 
-                var position = e.GetPosition(Vbox);
+            var element = sender as UIElement;
+
+            var transform = VplControl.RenderTransform as MatrixTransform;
+            var matrix = transform.Matrix;
+            var scale = e.Delta >= 0 ? 1.1 : (1.0 / 1.1);
+            var position = e.GetPosition(Vbox);
 
             {
-                    //Limit scale to 1.2 - 0.5
-                    scale = (( actualzoom > 0.5 || scale == 1.1)&& (actualzoom < 1.2 || scale <1 )) ? scale: 1;
-                    matrix.ScaleAt(scale, scale, position.X, position.Y);
-                    transform.Matrix = matrix;
+                //Limit scale to 1.2 - 0.5
+                scale = ((actualzoom > 0.5 || scale == 1.1) && (actualzoom < 1.2 || scale < 1)) ? scale : 1;
+                matrix.ScaleAt(scale, scale, position.X, position.Y);
+                transform.Matrix = matrix;
 
-                    actualzoom *= scale;
+                actualzoom *= scale;
 
             }
 
@@ -121,11 +98,11 @@ namespace TUM.CMS.VplControl.Test
             if (File.Exists(filePath))
             {
                 VplControl.OpenFile(filePath);
-                //VplGroupControl.MainVplControl.OpenFile(filePath);
+                
             }
         }
 
-       
+
 
         private void CommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
         {
