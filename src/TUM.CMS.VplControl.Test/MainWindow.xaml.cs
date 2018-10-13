@@ -27,7 +27,8 @@ namespace TUM.CMS.VplControl.Test
                 Utilities.Utilities.GetTypesInNamespace(Assembly.GetExecutingAssembly(), "TUM.CMS.VplControl.Test.Nodes")
                     .ToList());
            this.MouseWheel += Canvas_MouseWheel;
-          
+
+            this.VplControl.SizableParent = Tab;
             VplGroupControl.MainVplControl.NodeTypeMode = NodeTypeModes.All;
           
 
@@ -88,13 +89,15 @@ namespace TUM.CMS.VplControl.Test
 
         const double ScaleRate = 1.1;
         private double actualzoom { get; set; } = 1;
+
         private void Canvas_MouseWheel(object sender, MouseWheelEventArgs e)
         {
+            //Performing Matrix scale
                 var element = sender as UIElement;
                 
                 var transform = VplControl.RenderTransform as MatrixTransform;
                 var matrix = transform.Matrix;
-                var scale = e.Delta >= 0 ? 1.1 : (1.0 / 1.1); // choose appropriate scaling factor
+                var scale = e.Delta >= 0 ? 1.1 : (1.0 / 1.1); 
                 var position = e.GetPosition(Vbox);
 
             {
@@ -102,39 +105,13 @@ namespace TUM.CMS.VplControl.Test
                     scale = (( actualzoom > 0.5 || scale == 1.1)&& (actualzoom < 1.2 || scale <1 )) ? scale: 1;
                     matrix.ScaleAt(scale, scale, position.X, position.Y);
                     transform.Matrix = matrix;
-                    //VplControl.Width /= scale;
-                    //VplControl.Height /= scale;
+
                     actualzoom *= scale;
-
-
 
             }
 
             VplControl.UpdateLayout();
-            //foreach (Border item in VplControl.Children.OfType<Border>())
-            //{
 
-            //    var obj = item.Child;
-            //    var position = e.GetPosition(VplControl);
-
-            //    Point Center  =new Point( VplControl.Width /2, VplControl.Height/2) ;
-                
-            //    var type = obj.GetType();
-            //    if (obj.GetType().BaseType == typeof(Node))
-            //    {
-            //        //if(actualzoom > 0)
-            //        //{
-            //            var node = obj as Node;
-            //            Point nCurrentL = new Point(node.Top, node.Left);
-            //            Point nodeNewLocation = new Point((nCurrentL.X + Center.X)/2, (nCurrentL.Y + Center.Y) / 2);
-            //            node.Top = nodeNewLocation.Y;
-            //            node.Left = nodeNewLocation.X;
-                        
-            //        //}
-
-            //    }
-
-            //}
         }
 
 

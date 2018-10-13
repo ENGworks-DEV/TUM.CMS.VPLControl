@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using Microsoft.CSharp;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -48,6 +49,7 @@ namespace TUM.CMS.VplControl.Core
         private Double _ScaleYMax = 4.0;
         private Double _ScaleXMin = 0.1;
         private Double _ScaleYMin = 0.1;
+
         public VplControl()
         {
             if (!DesignerProperties.GetIsInDesignMode(this))
@@ -138,6 +140,7 @@ namespace TUM.CMS.VplControl.Core
         [DisplayName(@"Graph flow firection")]
         [ExpandableObject]
         public Theme Theme { get; set; }
+        public dynamic SizableParent { get;  set; }
 
         private static void InitializeGridBackground()
         {
@@ -290,10 +293,10 @@ namespace TUM.CMS.VplControl.Core
                         }
                         else
                         {
-                            // left singe click in empty space of canvas
-                            startSelectionRectanglePoint = Mouse.GetPosition(this);
-                            mouseMode = MouseMode.PreSelectionRectangle;
-                            SplineMode = SplineModes.Nothing;
+                            //// left singe click in empty space of canvas
+                            //startSelectionRectanglePoint = Mouse.GetPosition(this);
+                            //mouseMode = MouseMode.PreSelectionRectangle;
+                            //SplineMode = SplineModes.Nothing;
                         }
 
                         if (radialMenu != null)
@@ -327,8 +330,14 @@ namespace TUM.CMS.VplControl.Core
                             radialMenu.IsOpen = false;
                             await Task.Delay(400);
                         }
-                        radialMenu.SetValue(LeftProperty, Mouse.GetPosition(this).X - 150);
-                        radialMenu.SetValue(TopProperty, Mouse.GetPosition(this).Y - 150);
+
+                        //Change location
+                        var size = this.ActualHeight;
+                        //Transform to method
+                        
+                        var relative = SizableParent.TranslatePoint(Mouse.GetPosition(SizableParent as IInputElement), this);
+                        radialMenu.SetValue(LeftProperty, relative.X - 150);
+                        radialMenu.SetValue(TopProperty, relative.Y - 150);
 
                         radialMenu.IsOpen = true;
                     }
@@ -363,8 +372,13 @@ namespace TUM.CMS.VplControl.Core
                 selectionNode = new SelectionNode(this);
             }
 
-            selectionNode.Left = Mouse.GetPosition(this).X - 45;
-            selectionNode.Top = Mouse.GetPosition(this).Y - 20;
+           //Get the mouse location from SizableParent perspective translated actual vplcontrol
+            var relative = SizableParent.TranslatePoint(Mouse.GetPosition(SizableParent as IInputElement), this);
+            //Vplcontrol had been translated by matrix during zoom so we need to use it to locate the node on screen
+            var translation = this.TranslateTransform;
+            
+            selectionNode.Left = relative.X - translation.X -45 ;
+            selectionNode.Top = relative.Y - translation.Y - 45;
 
             selectionNode.Show();
         }
