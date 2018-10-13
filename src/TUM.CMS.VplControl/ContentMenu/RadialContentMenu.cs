@@ -127,47 +127,90 @@ namespace TUM.CMS.VplControl.ContentMenu
                     case "MenuZoomToFit":
                         // fit pan
                         bBox = Node.GetBoundingBoxOfNodes(HostCanvas.NodeCollection.ToList());
+                        //Transaling to UI dimensions
+                        var parent = HostCanvas.SizableParent;
+                        var CenterOfUI = new Point(parent.ActualHeight / 2, parent.ActualHeight / 2);
+                        var relative = parent.TranslatePoint(CenterOfUI, HostCanvas);
+                        var ttransf = HostCanvas.RenderTransform as System.Windows.Media.TranslateTransform;
+                        var transform = HostCanvas.RenderTransform as System.Windows.Media.MatrixTransform;
 
-                        var deltaX = bBox.Left + bBox.Width/2 - HostCanvas.ActualWidth/2;
-                        var deltaY = bBox.Top + bBox.Height/2 - HostCanvas.ActualHeight/2;
-
-                        foreach (var node in HostCanvas.NodeCollection)
+                        Point BBMax = new Point();
+                        Point BBMinx = new Point();
+                        foreach (var n in HostCanvas.NodeCollection.ToList())
                         {
-                            node.Left -= deltaX;
-                            node.Top -= deltaY;
+                            var left = n.Left + n.ActualWidth / 2;
+                            var top = n.Top + n.ActualHeight / 2;
+                            if (BBMax.X == 0)
+                            {
+                                BBMax.X = BBMinx.X = left;
+                                BBMax.Y = BBMinx.Y = top;
+                            }
+                            else
+                            {
+                                BBMax.X = (BBMax.X > left) ? left : BBMax.X;
+                                BBMax.Y = (BBMax.Y < top) ? top : BBMax.Y;
+                                BBMinx.X = (BBMinx.X < left) ? left : BBMinx.X;
+                                BBMinx.Y = (BBMinx.Y > top) ? top : BBMinx.Y;
+                            }
                         }
 
-                        HostCanvas.Refresh();
 
-                        // fit scale
-                        bBox = Node.GetBoundingBoxOfNodes(HostCanvas.NodeCollection.ToList());
 
-                        var ratioX = bBox.Width/HostCanvas.ActualWidth;
-                        var ratioY = bBox.Height/HostCanvas.ActualHeight;
+
+
+                     
+                        var matrix = transform.Matrix;
+                        //If 
+                        var ratioX = parent.ActualWidth/ bBox.Width;
+                        var ratioY = parent.ActualHeight/ bBox.Height;
+
+                        //TODO use BB to zoom and pan to all elements
                         var ratio = Math.Max(ratioX, ratioY);
-                        //ratio =Math.Ceiling(ratio*10)/10-1;
-                        ratio -= 1;
+                        
+                        var Zero = parent.TranslatePoint(new Point(), HostCanvas);
+                        var Max = parent.TranslatePoint(new Point(parent.ActualWidth,parent.ActualHeight), HostCanvas);
+                        var b = ttransf.TransformBounds(bBox);
 
-                        if (ratio < 0)
-                        {
-                            // HostCanvas.DoZoomIn(new Point(HostCanvas.ActualWidth/2, HostCanvas.ActualHeight/2),
-                            //     Math.Abs(ratio));
-                        }
+                        matrix.ScaleAt(ratio, ratio, relative.X, relative.Y);
+                        transform.Matrix = matrix;
 
-                        HostCanvas.Refresh();
+                        //foreach (var node in HostCanvas.NodeCollection)
+                        //{
+                        //    node.Left = relative.X ;
+                        //    node.Top = relative.Y ;
+                        //}
 
-                        // fit pan
-                        bBox = Node.GetBoundingBoxOfNodes(HostCanvas.NodeCollection.ToList());
+                        //HostCanvas.Refresh();
 
-                        deltaX = bBox.Left + bBox.Width/2 - HostCanvas.ActualWidth/2;
-                        deltaY = bBox.Top + bBox.Height/2 - HostCanvas.ActualHeight/2;
+                        // // fit scale
+                        // bBox = Node.GetBoundingBoxOfNodes(HostCanvas.NodeCollection.ToList());
 
-                        foreach (var node in HostCanvas.NodeCollection)
-                        {
-                            node.Left -= deltaX;
-                            node.Top -= deltaY;
-                        }
-                        HostCanvas.Refresh();
+                        // var ratioX = bBox.Width/ parent.ActualWidth;
+                        // var ratioY = bBox.Height/ parent.ActualHeight;
+                        // var ratio = Math.Max(ratioX, ratioY);
+                        // //ratio =Math.Ceiling(ratio*10)/10-1;
+                        // //ratio -= 1;
+
+                        // if (ratio < 0)
+                        // {
+                        //     //HostCanvas.DoZoomIn(new Point(CenterOfUI.X / 2, CenterOfUI.Y / 2),
+                        //     //    Math.Abs(ratio));
+                        // }
+
+                        //// HostCanvas.Refresh();
+
+                        // // fit pan
+                        // bBox = Node.GetBoundingBoxOfNodes(HostCanvas.NodeCollection.ToList());
+
+                        // //deltaX = (bBox.Left - relative.X) + bBox.X - CenterOfUI.X;
+                        // //deltaY = (bBox.Top - relative.Y )+ bBox.Y- CenterOfUI.Y;
+
+                        // //foreach (var node in HostCanvas.NodeCollection)
+                        // //{
+                        // //    node.Left -= deltaX;
+                        // //    node.Top -= deltaY;
+                        // //}
+                        // //HostCanvas.Refresh();
 
                         break;
                     case "MenuAlign":
