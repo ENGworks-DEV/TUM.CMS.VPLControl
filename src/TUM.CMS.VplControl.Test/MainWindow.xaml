@@ -46,7 +46,7 @@
 
                 <Viewbox x:Name="Vbox" HorizontalAlignment="Center" ClipToBounds="True" Stretch="None" VerticalAlignment="Center" >
 
-                    <core:VplControl x:Name="VplControl" ClipToBounds="True"  Width="8000" Height="8000"  >
+                    <core:VplControl x:Name="VplControl" ClipToBounds="False"  Width="8000" Height="8000"  >
                         <core:VplControl.RenderTransform>
                             <MatrixTransform/>
                         </core:VplControl.RenderTransform>
