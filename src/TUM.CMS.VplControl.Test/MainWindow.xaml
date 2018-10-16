@@ -32,18 +32,19 @@
         <CommandBinding Command="UnselectAll"    Executed="btnUnselect_Click" />-->
 
     </Window.CommandBindings>
-    <Grid>
+    <Grid ShowGridLines="True" Margin="2">
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition x:Name="A"/>
-            <ColumnDefinition x:Name="B"/>
+            <ColumnDefinition x:Name="A" />
+            <ColumnDefinition x:Name="B" />
         </Grid.ColumnDefinitions>
+        
         <TabControl x:Name="Tab" Grid.ColumnSpan="2" Grid.RowSpan="2" Background="#FFA4A4A4" >
             <TabItem Header="Project"  >
-
+                
                 <Viewbox x:Name="Vbox" HorizontalAlignment="Center" ClipToBounds="True" Stretch="None" VerticalAlignment="Center" >
 
                     <core:VplControl x:Name="VplControl" ClipToBounds="False"  Width="8000" Height="8000"  >

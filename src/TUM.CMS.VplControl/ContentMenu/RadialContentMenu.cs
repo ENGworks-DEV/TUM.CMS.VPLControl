@@ -130,46 +130,49 @@ namespace TUM.CMS.VplControl.ContentMenu
                         bBox = Node.GetBoundingBoxOfNodes(HostCanvas.NodeCollection.ToList());
                         //Transaling to UI dimensions
                         var parent = HostCanvas.SizableParent;
-                        var CenterOfUI = new Point(parent.ActualHeight / 2, parent.ActualHeight / 2);
+                        var CenterOfUI = new Point(parent.ActualWidth / 2, parent.ActualHeight / 2);
                         var relative = parent.TranslatePoint(CenterOfUI, HostCanvas);
                         
-                        var transform = HostCanvas.RenderTransform as MatrixTransform;
 
-                        var matrix = transform.Matrix;
+                        
                         var translation = HostCanvas.TranslateTransform;
                         var origin = new Point(HostCanvas.TranslateTransform.X, HostCanvas.TranslateTransform.Y);
-                        HostCanvas.TranslateTransform.X = relative.X - bBox.X ;
-                        HostCanvas.TranslateTransform.Y = relative.Y  -( bBox.Y+ bBox.Height/ 2);
-                        
-
-                        bBox = Node.GetBoundingBoxOfNodes(HostCanvas.NodeCollection.ToList());
-
-                        //foreach (var node in HostCanvas.NodeCollection.ToList())
-                        //{
-                        //    node.Left -=bBox.X + ( relative.X - translation.X);
-                        //    node.Top -=bBox.Y + (relative.Y -translation.Y);
-
-                        //}
-
-                        //bBox = Node.GetBoundingBoxOfNodes(HostCanvas.NodeCollection.ToList());
-
-                        var Zero = parent.TranslatePoint(new Point(), HostCanvas);
-                        var Max = parent.TranslatePoint(new Point(parent.ActualWidth, parent.ActualHeight), HostCanvas);
-                        var rect = new Rect(Zero, Max);
-
-                        var scale = Math.Max(rect.Width / bBox.Width, rect.Height / bBox.Height);
-
-                        var scaletransf = HostCanvas.ScaleTransform;
-                        //var translation = HostCanvas.TranslateTransform;
-                        //var s1 = parent.ActualWidth / bBox.Width;
-                        //////matrix.TranslatePrepend(bBox.X, bBox.Y);
-                        ////var x = bBox.X -relative.X;
-                        ////var y = bBox.X -relative.Y;
-                        //scaletransf.ScaleX= scale;
-                        //scaletransf.ScaleY=scale;
-                        
-                        //transform.Matrix = matrix;
+                        //HostCanvas.TranslateTransform.X = relative.X - (bBox.X + bBox.Width / 2);
+                        //HostCanvas.TranslateTransform.Y = relative.Y - (bBox.Y + bBox.Height / 2);
+                        var transform = HostCanvas.RenderTransform as MatrixTransform;
+                        relative = parent.TranslatePoint(CenterOfUI, HostCanvas);
+                        //HostCanvas.ScaleTransform.ScaleX = 1;
+                        //HostCanvas.ScaleTransform.ScaleY = 1;
                         HostCanvas.UpdateLayout();
+
+                        CenterOfUI = new Point(parent.ActualHeight / 2, parent.ActualHeight / 2);
+                        relative = parent.TranslatePoint(CenterOfUI, HostCanvas);
+
+                        var ll = HostCanvas.SizableParent.Width;
+                        var matrix = transform.Matrix;
+                        var offsetX = relative.X / matrix.M22;
+                        var offsetY = relative.Y / matrix.M22;
+                        matrix.Translate(offsetX,offsetY);
+                        //matrix.OffsetY = relative.Y ;
+
+                        //matrix.ScaleAt(1.1, 1.1, relative.X, relative.Y);
+                        transform.Matrix = matrix;
+                        //HostCanvas.UpdateLayout();
+                        //bBox = Node.GetBoundingBoxOfNodes(HostCanvas.NodeCollection.ToList());
+                        //transform.Matrix = matrix;
+
+                        //var Zero = parent.TranslatePoint(new Point(), HostCanvas);
+                        //var Max = parent.TranslatePoint(new Point(parent.ActualWidth, -parent.ActualHeight), HostCanvas);
+                        //var rect = new Rect(Zero, Max);
+
+                        //var scale = Math.Max(rect.Width / bBox.Width, rect.Height / bBox.Height);
+
+                        //var scaletransf = HostCanvas.ScaleTransform;
+                        //HostCanvas.UpdateLayout();
+                        //matrix.ScaleAt(1.1, 1.1,HostCanvas.TranslateTransform.X, HostCanvas.TranslateTransform.Y);
+                        //transform.Matrix = matrix;
+
+
 
 
                         break;
