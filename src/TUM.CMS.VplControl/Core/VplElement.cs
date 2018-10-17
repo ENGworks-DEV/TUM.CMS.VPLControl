@@ -190,17 +190,17 @@ namespace TUM.CMS.VplControl.Core
         /// <summary>
         ///     The top coordinate of this element with respect to the host canvas.
         /// </summary>
-        public dynamic Top
+        public double Top
         {
-            get { return (int)Border.GetValue(Canvas.TopProperty); }
+            get { return (double)Border.GetValue(Canvas.TopProperty); }
             set
             {
-                Border.SetValue(Canvas.TopProperty, int.Parse(value));
+                Border.SetValue(Canvas.TopProperty, value);
 
                 if (HitTestBorder != null)
                 {
                     HitTestBorder.Height = 30;
-                    Canvas.SetTop(HitTestBorder, int.Parse(Top) - 30);
+                    Canvas.SetTop(HitTestBorder, Top - 30);
                 }
 
                 HostCanvas.Refresh();
@@ -211,17 +211,17 @@ namespace TUM.CMS.VplControl.Core
         /// <summary>
         ///     The left coordinate of this element with respect to the host canvas.
         /// </summary>
-        public dynamic Left
+        public double Left
         {
-            get { return (int) Border.GetValue(Canvas.LeftProperty); }
+            get { return (double) Border.GetValue(Canvas.LeftProperty); }
             set
             {
-                Border.SetValue(Canvas.LeftProperty, int.Parse(value));
+                Border.SetValue(Canvas.LeftProperty, value);
 
                 if (HitTestBorder != null)
                 {
                     HitTestBorder.Width = ActualWidth + 20;
-                    Canvas.SetLeft(HitTestBorder, int.Parse(Left) - 10);
+                    Canvas.SetLeft(HitTestBorder, Left - 10);
                 }
 
                 HostCanvas.Refresh();
