@@ -127,49 +127,27 @@ namespace TUM.CMS.VplControl.ContentMenu
                         window.Show();
                         break;
                     case "MenuZoomToFit":
-                        bBox = Node.GetBoundingBoxOfNodes(HostCanvas.NodeCollection.ToList());
+
                         //Transaling to UI dimensions
                         var parent = HostCanvas.SizableParent;
                         var CenterOfUI = new Point(parent.ActualWidth / 2, parent.ActualHeight / 2);
                         var relative = parent.TranslatePoint(CenterOfUI, HostCanvas);
-                        
 
-                        
+
+
+
+                        bBox = Node.GetBoundingBoxOfNodes(HostCanvas.NodeCollection.ToList());
                         var translation = HostCanvas.TranslateTransform;
                         var origin = new Point(HostCanvas.TranslateTransform.X, HostCanvas.TranslateTransform.Y);
-                        //HostCanvas.TranslateTransform.X = relative.X - (bBox.X + bBox.Width / 2);
-                        //HostCanvas.TranslateTransform.Y = relative.Y - (bBox.Y + bBox.Height / 2);
-                        var transform = HostCanvas.RenderTransform as MatrixTransform;
-                        relative = parent.TranslatePoint(CenterOfUI, HostCanvas);
-                        //HostCanvas.ScaleTransform.ScaleX = 1;
-                        //HostCanvas.ScaleTransform.ScaleY = 1;
+                        HostCanvas.TranslateTransform.X = relative.X - (bBox.X + bBox.Width / 2);
+                        HostCanvas.TranslateTransform.Y = relative.Y - (bBox.Y + bBox.Height / 2);
                         HostCanvas.UpdateLayout();
 
-                        CenterOfUI = new Point(parent.ActualHeight / 2, parent.ActualHeight / 2);
-                        relative = parent.TranslatePoint(CenterOfUI, HostCanvas);
+                        //var transform = HostCanvas.RenderTransform as MatrixTransform;
+                        //var matrix = transform.Value;
 
-                        var ll = HostCanvas.SizableParent.Width;
-                        var matrix = transform.Matrix;
-                        var offsetX = relative.X / matrix.M22;
-                        var offsetY = relative.Y / matrix.M22;
-                        matrix.Translate(offsetX,offsetY);
-                        //matrix.OffsetY = relative.Y ;
+                        //matrix.Scale(4, 4);
 
-                        //matrix.ScaleAt(1.1, 1.1, relative.X, relative.Y);
-                        transform.Matrix = matrix;
-                        //HostCanvas.UpdateLayout();
-                        //bBox = Node.GetBoundingBoxOfNodes(HostCanvas.NodeCollection.ToList());
-                        //transform.Matrix = matrix;
-
-                        //var Zero = parent.TranslatePoint(new Point(), HostCanvas);
-                        //var Max = parent.TranslatePoint(new Point(parent.ActualWidth, -parent.ActualHeight), HostCanvas);
-                        //var rect = new Rect(Zero, Max);
-
-                        //var scale = Math.Max(rect.Width / bBox.Width, rect.Height / bBox.Height);
-
-                        //var scaletransf = HostCanvas.ScaleTransform;
-                        //HostCanvas.UpdateLayout();
-                        //matrix.ScaleAt(1.1, 1.1,HostCanvas.TranslateTransform.X, HostCanvas.TranslateTransform.Y);
                         //transform.Matrix = matrix;
 
 
@@ -192,7 +170,7 @@ namespace TUM.CMS.VplControl.ContentMenu
                         break;
                     case "AlignHCenter":
                         foreach (var node in HostCanvas.SelectedNodes)
-                            node.Left = bBox.Right - bBox.Width/2 - node.ActualWidth/2;
+                            node.Left = bBox.Right - bBox.Width / 2 - node.ActualWidth / 2;
                         break;
                     case "AlignRight":
                         foreach (var node in HostCanvas.SelectedNodes)
@@ -204,7 +182,7 @@ namespace TUM.CMS.VplControl.ContentMenu
                         break;
                     case "AlignVCenter":
                         foreach (var node in HostCanvas.SelectedNodes)
-                            node.Top = bBox.Bottom - bBox.Height/2 - node.ActualHeight/2;
+                            node.Top = bBox.Bottom - bBox.Height / 2 - node.ActualHeight / 2;
                         break;
                     case "AlignBottom":
                         foreach (var node in HostCanvas.SelectedNodes)
