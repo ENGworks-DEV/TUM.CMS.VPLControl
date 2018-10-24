@@ -596,8 +596,8 @@ namespace TUM.CMS.VplControl.Core
             var topValue = xmlReader.GetAttribute("TOP").Replace(",", ".");
             var leftValue = xmlReader.GetAttribute("Left").Replace(",", ".");
 
-            topValue = xmlReader.GetAttribute("TOP").Replace(".", ",");
-            leftValue = xmlReader.GetAttribute("Left").Replace(".", ",");
+            //topValue = xmlReader.GetAttribute("TOP").Replace(".", ",");
+            //leftValue = xmlReader.GetAttribute("Left").Replace(".", ",");
 
             if (HostCanvas.ImportFlowDirection == HostCanvas.GraphFlowDirection)
             {
