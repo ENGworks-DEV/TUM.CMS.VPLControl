@@ -827,7 +827,7 @@ namespace TUM.CMS.VplControl.Core
         public void VplControlGroup()
         {
 
-            if (Keyboard.Modifiers == ModifierKeys.Control)
+            
                 GroupNodes();
         }
 
