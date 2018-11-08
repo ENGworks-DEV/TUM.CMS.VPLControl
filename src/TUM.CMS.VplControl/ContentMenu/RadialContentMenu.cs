@@ -128,6 +128,49 @@ namespace TUM.CMS.VplControl.ContentMenu
                         break;
                     case "MenuZoomToFit":
 
+
+                        //Reset canvas to center
+                        var error = 1;
+
+                        //List<Node> nodeList = new List<Node>();
+  
+
+                        //foreach (var children in HostCanvas.Children)
+                        //{
+                        //    if (children is Border)
+                        //    {
+                        //        Node n = (children as Border).Child as Node;
+                        //        if (n!= null)
+                        //        {
+                        //            //n.Left += n.Left -40000;
+                        //            //n.Top += n.Top - 40000;
+                        //            nodeList.Add(n);
+                        //        }
+
+                        //    }
+                        //}
+                        //HostCanvas.UpdateLayout();
+
+                        ////Get the mouse location from SizableParent perspective translated actual vplcontrol
+                        //var relative = HostCanvas.SizableParent.TranslatePoint(System.Windows.Input.Mouse.GetPosition(HostCanvas.SizableParent as IInputElement), this);
+                        ////Vplcontrol had been translated by matrix during zoom so we need to use it to locate the node on screen
+
+           
+
+
+                        //bBox = Node.GetBoundingBoxOfNodes(nodeList);
+                        //var transformation = HostCanvas.TranslateTransform;
+                        //var pp = System.Windows.Input.Mouse.GetPosition(HostCanvas.SizableParent as IInputElement);
+                        //var bbTop =  (relative.Y - transformation.Y) - (bBox.Y);
+                        //var bbLeft = (relative.X - transformation.X) - (bBox.X) ;
+                        //foreach (var node in nodeList)
+                        //{
+
+                        //    node.Top += node.Top - bbTop;
+                        //    node.Left += node.Left - bbLeft;
+
+                        //}
+
                         //Transaling to UI dimensions
                         var parent = HostCanvas.SizableParent;
                         var CenterOfUI = new Point(parent.ActualWidth / 2, parent.ActualHeight / 2);
@@ -143,14 +186,15 @@ namespace TUM.CMS.VplControl.ContentMenu
                         HostCanvas.TranslateTransform.Y = relative.Y - (bBox.Y + bBox.Height / 2);
                         HostCanvas.UpdateLayout();
 
+                        ////var transform = HostCanvas.RenderTransform as MatrixTransform;
+                        ////var matrix = transform.Value;
+
+                        ////matrix.Scale(4, 4);
+
+                        ////transform.Matrix = matrix;
+
                         //var transform = HostCanvas.RenderTransform as MatrixTransform;
-                        //var matrix = transform.Value;
-
-                        //matrix.Scale(4, 4);
-
-                        //transform.Matrix = matrix;
-
-
+                        //transform.Matrix = new System.Windows.Media.Matrix();
 
 
                         break;
