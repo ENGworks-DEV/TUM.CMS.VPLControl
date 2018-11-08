@@ -141,6 +141,7 @@ namespace TUM.CMS.VplControl.Core
         [ExpandableObject]
         public Theme Theme { get; set; }
         public dynamic SizableParent { get;  set; }
+        public string fileName { get; private set; }
 
         private static void InitializeGridBackground()
         {
@@ -1248,7 +1249,10 @@ namespace TUM.CMS.VplControl.Core
 
 
             if (openFileDialog.ShowDialog() == true)
+            {
                 DeserializeNetwork(openFileDialog.FileName);
+                fileName = System.IO.Path.GetFileName(openFileDialog.FileName);
+            }
         }
 
         public void OpenFile(string filepath)
@@ -1265,7 +1269,10 @@ namespace TUM.CMS.VplControl.Core
             };
 
             if (saveFileDialog.ShowDialog() == true)
+            {
                 SerializeNetwork(saveFileDialog.FileName);
+                fileName = System.IO.Path.GetFileName(saveFileDialog.FileName);
+            }
         }
 
         public void GroupNodes()
