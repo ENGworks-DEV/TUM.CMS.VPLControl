@@ -732,8 +732,17 @@ namespace TUM.CMS.VplControl.Core
             var bBox = Node.GetBoundingBoxOfNodes(tempCollection.ToList());
 
             var copyPoint = new Point(bBox.Left + bBox.Size.Width / 2, bBox.Top + bBox.Size.Height / 2);
-            var pastePoint = Mouse.GetPosition(this);
+            
 
+            //Get the mouse location from SizableParent perspective translated actual vplcontrol
+            var relative = SizableParent.TranslatePoint(Mouse.GetPosition(SizableParent as IInputElement), this);
+            //Vplcontrol had been translated by matrix during zoom so we need to use it to locate the node on screen
+            var translation = this.TranslateTransform;
+
+            var Left = relative.X - translation.X ;
+            var Top = relative.Y - translation.Y ;
+
+            var pastePoint = new Point(Left,Top);
             var delta = Point.Subtract(pastePoint, copyPoint);
 
             UnselectAllElements();
